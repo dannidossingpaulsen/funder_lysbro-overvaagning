@@ -146,7 +146,12 @@ jobs:
                           "vis_url": href
                       })
 
-              return rows
+              df = pd.DataFrame(rows).drop_duplicates().reset_index(drop=True)
+
+              # HASTIGHEDSFORBEDRING:
+              # Økonomiudvalget får lov at beholde 7 links, de øvrige 5.
+              grænse = 7 if udvalg_navn == "Økonomiudvalget" else 5
+              return df.head(grænse).to_dict("records")
 
 
           async def hent_alle_moedelinks(df_udvalg):
@@ -270,18 +275,18 @@ jobs:
                       if ("Funder" not in blok) and ("Lysbro" not in blok):
                           continue
 
+                      soegeord = []
+                      if "Funder" in blok:
+                          soegeord.append("Funder")
+                      if "Lysbro" in blok:
+                          soegeord.append("Lysbro")
+
                       resume_match = re.search(r"Resume\s*(.*?)\s*Indstilling", blok, flags=re.S)
                       indstilling_match = re.search(
                           r"Indstilling\s*(.*?)(?:\s*Beskrivelse af sagen|\Z)",
                           blok,
                           flags=re.S
                       )
-
-                      soegeord = []
-                      if "Funder" in blok:
-                          soegeord.append("Funder")
-                      if "Lysbro" in blok:
-                          soegeord.append("Lysbro")
 
                       rows.append({
                           "søgeord": ", ".join(soegeord),
@@ -407,7 +412,7 @@ jobs:
               df_mja_links = hent_mja_forside_links()
               rows = []
 
-              for _, row in df_mja_links.head(30).iterrows():
+              for _, row in df_mja_links.head(20).iterrows():
                   try:
                       resultat = await hent_mja_artikel(row["url"])
                       if resultat:
