@@ -3,8 +3,6 @@ name: Update Funder-Lysbro site
 on:
   workflow_dispatch:
   schedule:
-    # 12:00 og 18:00 dansk tid.
-    # GitHub kører i UTC, så her er det 10:00 og 16:00 UTC.
     - cron: "0 10 * * *"
     - cron: "0 16 * * *"
 
@@ -34,13 +32,12 @@ jobs:
           cat > build_site.py <<'PY'
           import re
           import html
-          import json
           import requests
           import pandas as pd
           import asyncio
           from datetime import datetime
           from bs4 import BeautifulSoup
-          from urllib.parse import urljoin, quote
+          from urllib.parse import urljoin
           from playwright.async_api import async_playwright
 
 
@@ -206,14 +203,24 @@ jobs:
                   page = await browser.new_page()
 
                   for _, row in df_links.iterrows():
-                      body_text = await hent_udfoldet_moedetekst(page, row["vis_url"])
-                      resultater.append({
-                          "udvalg": row["udvalg"],
-                          "tekst": row["tekst"],
-                          "vis_url": row["vis_url"],
-                          "Funder": "Funder" in body_text,
-                          "Lysbro": "Lysbro" in body_text
-                      })
+                      try:
+                          body_text = await hent_udfoldet_moedetekst(page, row["vis_url"])
+                          resultater.append({
+                              "udvalg": row["udvalg"],
+                              "tekst": row["tekst"],
+                              "vis_url": row["vis_url"],
+                              "Funder": "Funder" in body_text,
+                              "Lysbro": "Lysbro" in body_text
+                          })
+                      except Exception as e:
+                          print(f"Fejl i møde {row['vis_url']}: {e}")
+                          resultater.append({
+                              "udvalg": row["udvalg"],
+                              "tekst": row["tekst"],
+                              "vis_url": row["vis_url"],
+                              "Funder": False,
+                              "Lysbro": False
+                          })
 
                   await browser.close()
 
@@ -270,10 +277,14 @@ jobs:
                           flags=re.S
                       )
 
+                      soegeord = []
+                      if "Funder" in blok:
+                          soegeord.append("Funder")
+                      if "Lysbro" in blok:
+                          soegeord.append("Lysbro")
+
                       rows.append({
-                          "søgeord": ", ".join(
-                              [x for x in ["Funder", "Lysbro"] if x in blok]
-                          ),
+                          "søgeord": ", ".join(soegeord),
                           "dagsordentitel": titel,
                           "udvalg": udvalg,
                           "dato": dato,
@@ -281,8 +292,8 @@ jobs:
                           "indstilling": rens_visningstekst(indstilling_match.group(1)) if indstilling_match else "",
                           "url": vis_url
                       })
-                  except Exception:
-                      pass
+                  except Exception as e:
+                      print(f"Fejl i punkt '{titel}': {e}")
 
               return rows
 
@@ -298,66 +309,15 @@ jobs:
                   page = await browser.new_page()
 
                   for _, row in df_relevante_moeder.iterrows():
-                      rows = await udtraek_relevante_punkter_fra_moede(page, row["vis_url"])
-                      alle_rows.extend(rows)
+                      try:
+                          rows = await udtraek_relevante_punkter_fra_moede(page, row["vis_url"])
+                          alle_rows.extend(rows)
+                      except Exception as e:
+                          print(f"Fejl i relevant møde {row['vis_url']}: {e}")
 
                   await browser.close()
 
               return pd.DataFrame(alle_rows)
-
-
-          async def hent_mja_artikel(url):
-              async with async_playwright() as p:
-                  browser = await p.chromium.launch(
-                      headless=True,
-                      args=["--no-sandbox", "--disable-setuid-sandbox"]
-                  )
-                  page = await browser.new_page()
-
-                  await page.goto(url, wait_until="domcontentloaded")
-                  await page.wait_for_timeout(6000)
-
-                  titel = await page.title()
-                  titel = titel.split(" | ")[0].strip() if titel else None
-
-                  tekst = await page.locator("body").inner_text()
-                  tekst = re.sub(r"\s+", " ", tekst).strip()
-
-                  await browser.close()
-
-              start = tekst.find(titel) if titel else -1
-              if start != -1:
-                  tekst = tekst[start:]
-
-              stopord = [
-                  "Mest læste",
-                  "Midtjyllands Avis er dit lokale nyhedsmedie",
-                  "Køb abonnement",
-                  "Log ind"
-              ]
-              stop_pos = [tekst.find(s) for s in stopord if tekst.find(s) != -1]
-              if stop_pos:
-                  tekst = tekst[:min(stop_pos)]
-
-              tekst = re.sub(r"\s+", " ", tekst).strip()
-              underrubrik = tekst
-              if titel and underrubrik.startswith(titel):
-                  underrubrik = underrubrik[len(titel):].strip()
-
-              underrubrik = underrubrik[:500] if underrubrik else None
-
-              funder = "Funder" in (tekst or "")
-              lysbro = "Lysbro" in (tekst or "")
-
-              if not funder and not lysbro:
-                  return None
-
-              return {
-                  "rubrik": titel,
-                  "underrubrik": underrubrik,
-                  "url": url,
-                  "kilde": "MJA"
-              }
 
 
           def hent_mja_forside_links():
@@ -384,14 +344,76 @@ jobs:
               return pd.DataFrame(rows).drop_duplicates().reset_index(drop=True)
 
 
+          async def hent_mja_artikel(url):
+              try:
+                  async with async_playwright() as p:
+                      browser = await p.chromium.launch(
+                          headless=True,
+                          args=["--no-sandbox", "--disable-setuid-sandbox"]
+                      )
+                      page = await browser.new_page()
+
+                      await page.goto(url, wait_until="domcontentloaded", timeout=15000)
+                      await page.wait_for_timeout(4000)
+
+                      titel = await page.title()
+                      titel = titel.split(" | ")[0].strip() if titel else None
+
+                      tekst = await page.locator("body").inner_text()
+                      tekst = re.sub(r"\s+", " ", tekst).strip()
+
+                      await browser.close()
+
+                  start = tekst.find(titel) if titel else -1
+                  if start != -1:
+                      tekst = tekst[start:]
+
+                  stopord = [
+                      "Mest læste",
+                      "Midtjyllands Avis er dit lokale nyhedsmedie",
+                      "Køb abonnement",
+                      "Log ind"
+                  ]
+                  stop_pos = [tekst.find(s) for s in stopord if tekst.find(s) != -1]
+                  if stop_pos:
+                      tekst = tekst[:min(stop_pos)]
+
+                  tekst = re.sub(r"\s+", " ", tekst).strip()
+                  underrubrik = tekst
+                  if titel and underrubrik.startswith(titel):
+                      underrubrik = underrubrik[len(titel):].strip()
+
+                  underrubrik = underrubrik[:500] if underrubrik else None
+
+                  funder = "Funder" in (tekst or "")
+                  lysbro = "Lysbro" in (tekst or "")
+
+                  if not funder and not lysbro:
+                      return None
+
+                  return {
+                      "rubrik": titel,
+                      "underrubrik": underrubrik,
+                      "url": url,
+                      "kilde": "MJA"
+                  }
+
+              except Exception as e:
+                  print(f"MJA-fejl på {url}: {e}")
+                  return None
+
+
           async def byg_mja_data():
               df_mja_links = hent_mja_forside_links()
               rows = []
 
               for _, row in df_mja_links.head(30).iterrows():
-                  resultat = await hent_mja_artikel(row["url"])
-                  if resultat:
-                      rows.append(resultat)
+                  try:
+                      resultat = await hent_mja_artikel(row["url"])
+                      if resultat:
+                          rows.append(resultat)
+                  except Exception as e:
+                      print(f"Springer MJA-artikel over: {row['url']} -> {e}")
 
               return pd.DataFrame(rows).drop_duplicates().reset_index(drop=True) if rows else pd.DataFrame()
 
