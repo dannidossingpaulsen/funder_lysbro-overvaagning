@@ -1,0 +1,528 @@
+name: Update Funder-Lysbro site
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 12:00 og 18:00 dansk tid.
+    # GitHub kører i UTC, så her er det 10:00 og 16:00 UTC.
+    - cron: "0 10 * * *"
+    - cron: "0 16 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  build-site:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Hent repo
+        uses: actions/checkout@v4
+
+      - name: Sæt Python op
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Installer pakker
+        run: |
+          pip install pandas requests beautifulsoup4 playwright
+          python -m playwright install chromium
+
+      - name: Byg hjemmeside
+        run: |
+          cat > build_site.py <<'PY'
+          import re
+          import html
+          import json
+          import requests
+          import pandas as pd
+          import asyncio
+          from datetime import datetime
+          from bs4 import BeautifulSoup
+          from urllib.parse import urljoin, quote
+          from playwright.async_api import async_playwright
+
+
+          def rens_visningstekst(txt):
+              if not txt:
+                  return ""
+              txt = str(txt)
+              txt = txt.replace("\r", "\n")
+              txt = re.sub(r"(?m)^\s*\d+\s*$", "", txt)
+              txt = re.sub(r"(?m)^[ \t]+$", "", txt)
+              txt = re.sub(r"\n{3,}", "\n\n", txt)
+              txt = re.sub(r"[ \t]{2,}", " ", txt)
+              return txt.strip()
+
+
+          def parse_dansk_dato(txt):
+              if not txt:
+                  return pd.NaT
+
+              txt = str(txt).strip().lower()
+
+              maaneder = {
+                  "januar": "01",
+                  "februar": "02",
+                  "marts": "03",
+                  "april": "04",
+                  "maj": "05",
+                  "juni": "06",
+                  "juli": "07",
+                  "august": "08",
+                  "september": "09",
+                  "oktober": "10",
+                  "november": "11",
+                  "december": "12",
+              }
+
+              m = re.search(
+                  r"(\d{1,2})\.\s+([a-zæøå]+)\s+(\d{4})\s+kl\.\s+(\d{2})\.(\d{2})",
+                  txt
+              )
+              if not m:
+                  return pd.NaT
+
+              dag, maaned_navn, aar, time, minut = m.groups()
+              maaned = maaneder.get(maaned_navn)
+              if not maaned:
+                  return pd.NaT
+
+              iso = f"{aar}-{maaned}-{int(dag):02d} {time}:{minut}"
+              return pd.to_datetime(iso, errors="coerce")
+
+
+          def hent_udvalg():
+              url = "https://dagsordener.silkeborg.dk/api/agenda/udvalgsliste"
+              data = requests.get(url, timeout=30).json()
+
+              aktuelle_udvalg = [
+                  "Økonomiudvalget",
+                  "Erhvervs-, Uddannelses- og Arbejdsmarkedsudvalget",
+                  "Klima- og Miljøudvalget",
+                  "Plan-, Vej- og Trafikudvalget",
+                  "Dagtilbuds- og Familieudvalget",
+                  "Skoleudvalget",
+                  "Socialudvalget",
+                  "Ældre- og Sundhedsudvalget",
+                  "Nærheds- og Landdistriktsudvalget",
+                  "Kultur- og Fritidsudvalget",
+                  "Seniorrådet",
+                  "Handicaprådet",
+                  "Byrådet"
+              ]
+
+              rows = []
+              for gruppe in data["Udvalg"].values():
+                  for udvalg in gruppe:
+                      navn = udvalg["Navn"]
+                      udvalg_id = udvalg["Id"]
+                      if navn not in aktuelle_udvalg:
+                          continue
+                      rows.append({"udvalg": navn, "udvalg_id": udvalg_id})
+
+              return pd.DataFrame(rows).drop_duplicates().reset_index(drop=True)
+
+
+          async def hent_moedelinks_for_udvalg(page, udvalg_navn, udvalg_id):
+              udvalg_url = f"https://dagsordener.silkeborg.dk/?request.kriterie.udvalgId={udvalg_id}"
+              await page.goto(udvalg_url, wait_until="domcontentloaded")
+              await page.wait_for_timeout(5000)
+
+              links = await page.locator("a").evaluate_all("""
+                  els => els.map(a => ({
+                      text: (a.innerText || '').trim(),
+                      href: a.href
+                  }))
+              """)
+
+              rows = []
+              for link in links:
+                  text = link["text"]
+                  href = link["href"]
+                  if "/vis?" in href and "&id=" in href:
+                      rows.append({
+                          "udvalg": udvalg_navn,
+                          "udvalg_id": udvalg_id,
+                          "tekst": text,
+                          "vis_url": href
+                      })
+
+              return rows
+
+
+          async def hent_alle_moedelinks(df_udvalg):
+              alle_rows = []
+
+              async with async_playwright() as p:
+                  browser = await p.chromium.launch(
+                      headless=True,
+                      args=["--no-sandbox", "--disable-setuid-sandbox"]
+                  )
+                  page = await browser.new_page()
+
+                  for _, row in df_udvalg.iterrows():
+                      rows = await hent_moedelinks_for_udvalg(page, row["udvalg"], row["udvalg_id"])
+                      alle_rows.extend(rows)
+
+                  await browser.close()
+
+              return pd.DataFrame(alle_rows).drop_duplicates().reset_index(drop=True)
+
+
+          async def hent_udfoldet_moedetekst(page, vis_url):
+              await page.goto(vis_url, wait_until="domcontentloaded")
+              await page.wait_for_timeout(6000)
+
+              body_text = await page.locator("body").inner_text()
+              punkttitler = []
+
+              for linje in body_text.splitlines():
+                  linje = linje.strip()
+                  if re.match(r"^\d+\.\s", linje):
+                      punkttitler.append(linje)
+
+              punkttitler = list(dict.fromkeys(punkttitler))
+
+              for titel in punkttitler:
+                  try:
+                      await page.get_by_text(titel, exact=True).first.click(timeout=3000)
+                      await page.wait_for_timeout(400)
+                  except Exception:
+                      pass
+
+              return await page.locator("body").inner_text()
+
+
+          async def tjek_relevante_moeder(df_links):
+              resultater = []
+
+              async with async_playwright() as p:
+                  browser = await p.chromium.launch(
+                      headless=True,
+                      args=["--no-sandbox", "--disable-setuid-sandbox"]
+                  )
+                  page = await browser.new_page()
+
+                  for _, row in df_links.iterrows():
+                      body_text = await hent_udfoldet_moedetekst(page, row["vis_url"])
+                      resultater.append({
+                          "udvalg": row["udvalg"],
+                          "tekst": row["tekst"],
+                          "vis_url": row["vis_url"],
+                          "Funder": "Funder" in body_text,
+                          "Lysbro": "Lysbro" in body_text
+                      })
+
+                  await browser.close()
+
+              return pd.DataFrame(resultater)
+
+
+          async def udtraek_relevante_punkter_fra_moede(page, vis_url):
+              await page.goto(vis_url, wait_until="domcontentloaded")
+              await page.wait_for_timeout(6000)
+
+              toptekst = await page.locator("body").inner_text()
+
+              udvalg_match = re.search(r"Udvalg:\s*(.*)", toptekst)
+              dato_match = re.search(r"Mødedato:\s*(.*)", toptekst)
+
+              udvalg = udvalg_match.group(1).strip() if udvalg_match else None
+              dato = dato_match.group(1).strip() if dato_match else None
+
+              punkttitler = []
+              for linje in toptekst.splitlines():
+                  linje = linje.strip()
+                  if re.match(r"^\d+\.\s", linje):
+                      punkttitler.append(linje)
+
+              punkttitler = list(dict.fromkeys(punkttitler))
+              rows = []
+
+              for i, titel in enumerate(punkttitler):
+                  try:
+                      await page.get_by_text(titel, exact=True).first.click(timeout=3000)
+                      await page.wait_for_timeout(700)
+
+                      body_text = await page.locator("body").inner_text()
+                      næste_titel = punkttitler[i + 1] if i + 1 < len(punkttitler) else None
+
+                      if næste_titel:
+                          mønster = rf"({re.escape(titel)}.*?)(?:\n\s*{re.escape(næste_titel)}|$)"
+                      else:
+                          mønster = rf"({re.escape(titel)}.*)$"
+
+                      blok_match = re.search(mønster, body_text, flags=re.S)
+                      if not blok_match:
+                          continue
+
+                      blok = blok_match.group(1)
+
+                      if ("Funder" not in blok) and ("Lysbro" not in blok):
+                          continue
+
+                      resume_match = re.search(r"Resume\s*(.*?)\s*Indstilling", blok, flags=re.S)
+                      indstilling_match = re.search(
+                          r"Indstilling\s*(.*?)(?:\s*Beskrivelse af sagen|\Z)",
+                          blok,
+                          flags=re.S
+                      )
+
+                      rows.append({
+                          "søgeord": ", ".join(
+                              [x for x in ["Funder", "Lysbro"] if x in blok]
+                          ),
+                          "dagsordentitel": titel,
+                          "udvalg": udvalg,
+                          "dato": dato,
+                          "resume": rens_visningstekst(resume_match.group(1)) if resume_match else "",
+                          "indstilling": rens_visningstekst(indstilling_match.group(1)) if indstilling_match else "",
+                          "url": vis_url
+                      })
+                  except Exception:
+                      pass
+
+              return rows
+
+
+          async def byg_silkeborg_appdata(df_relevante_moeder):
+              alle_rows = []
+
+              async with async_playwright() as p:
+                  browser = await p.chromium.launch(
+                      headless=True,
+                      args=["--no-sandbox", "--disable-setuid-sandbox"]
+                  )
+                  page = await browser.new_page()
+
+                  for _, row in df_relevante_moeder.iterrows():
+                      rows = await udtraek_relevante_punkter_fra_moede(page, row["vis_url"])
+                      alle_rows.extend(rows)
+
+                  await browser.close()
+
+              return pd.DataFrame(alle_rows)
+
+
+          async def hent_mja_artikel(url):
+              async with async_playwright() as p:
+                  browser = await p.chromium.launch(
+                      headless=True,
+                      args=["--no-sandbox", "--disable-setuid-sandbox"]
+                  )
+                  page = await browser.new_page()
+
+                  await page.goto(url, wait_until="domcontentloaded")
+                  await page.wait_for_timeout(6000)
+
+                  titel = await page.title()
+                  titel = titel.split(" | ")[0].strip() if titel else None
+
+                  tekst = await page.locator("body").inner_text()
+                  tekst = re.sub(r"\s+", " ", tekst).strip()
+
+                  await browser.close()
+
+              start = tekst.find(titel) if titel else -1
+              if start != -1:
+                  tekst = tekst[start:]
+
+              stopord = [
+                  "Mest læste",
+                  "Midtjyllands Avis er dit lokale nyhedsmedie",
+                  "Køb abonnement",
+                  "Log ind"
+              ]
+              stop_pos = [tekst.find(s) for s in stopord if tekst.find(s) != -1]
+              if stop_pos:
+                  tekst = tekst[:min(stop_pos)]
+
+              tekst = re.sub(r"\s+", " ", tekst).strip()
+              underrubrik = tekst
+              if titel and underrubrik.startswith(titel):
+                  underrubrik = underrubrik[len(titel):].strip()
+
+              underrubrik = underrubrik[:500] if underrubrik else None
+
+              funder = "Funder" in (tekst or "")
+              lysbro = "Lysbro" in (tekst or "")
+
+              if not funder and not lysbro:
+                  return None
+
+              return {
+                  "rubrik": titel,
+                  "underrubrik": underrubrik,
+                  "url": url,
+                  "kilde": "MJA"
+              }
+
+
+          def hent_mja_forside_links():
+              url = "https://mja.dk"
+              response = requests.get(url, timeout=30)
+              response.encoding = response.apparent_encoding
+              soup = BeautifulSoup(response.text, "html.parser")
+
+              rows = []
+              for link in soup.find_all("a"):
+                  href = link.get("href")
+                  text = re.sub(r"\s+", " ", link.get_text(" ", strip=True)).strip()
+
+                  if not href or not text:
+                      continue
+                  if not href.startswith("/artikel/"):
+                      continue
+
+                  rows.append({
+                      "titel_forside": text,
+                      "url": urljoin("https://mja.dk", href)
+                  })
+
+              return pd.DataFrame(rows).drop_duplicates().reset_index(drop=True)
+
+
+          async def byg_mja_data():
+              df_mja_links = hent_mja_forside_links()
+              rows = []
+
+              for _, row in df_mja_links.head(30).iterrows():
+                  resultat = await hent_mja_artikel(row["url"])
+                  if resultat:
+                      rows.append(resultat)
+
+              return pd.DataFrame(rows).drop_duplicates().reset_index(drop=True) if rows else pd.DataFrame()
+
+
+          def kort_html_kommune(row):
+              soegeord = html.escape(rens_visningstekst(row["søgeord"]))
+              titel = html.escape(rens_visningstekst(row["dagsordentitel"]))
+              udvalg = html.escape(rens_visningstekst(row["udvalg"]))
+              dato = html.escape(rens_visningstekst(row["dato"]))
+              resume = html.escape(rens_visningstekst(row["resume"]))
+              indstilling = html.escape(rens_visningstekst(row["indstilling"]))
+              url = html.escape(str(row["url"] or ""))
+
+              return f"""
+              <div style="background:#fff;border:1px solid #d9e2ec;border-radius:14px;padding:18px;margin:14px 0;box-shadow:0 2px 8px rgba(0,0,0,0.05);font-family:Arial,sans-serif;line-height:1.5;">
+                  <div style="font-size:12px;font-weight:bold;color:#2b6cb0;margin-bottom:8px;text-transform:uppercase;">
+                      Silkeborg Kommune · {soegeord}
+                  </div>
+                  <div style="font-size:20px;font-weight:700;margin-bottom:8px;color:#1a202c;">
+                      {titel}
+                  </div>
+                  <div style="font-size:13px;color:#4a5568;margin-bottom:12px;">
+                      {udvalg} · {dato}
+                  </div>
+                  <div style="margin-bottom:12px;">
+                      <div style="font-weight:700; margin-bottom:4px;">Resume</div>
+                      <div style="color:#2d3748; white-space:pre-wrap;">{resume}</div>
+                  </div>
+                  <div style="margin-bottom:14px;">
+                      <div style="font-weight:700; margin-bottom:4px;">Indstilling</div>
+                      <div style="color:#2d3748; white-space:pre-wrap;">{indstilling}</div>
+                  </div>
+                  <a href="{url}" target="_blank" style="display:inline-block;background:#2b6cb0;color:#fff;text-decoration:none;padding:10px 14px;border-radius:10px;font-weight:600;">Åbn dagsorden</a>
+              </div>
+              """
+
+
+          def kort_html_mja(row):
+              titel = html.escape(rens_visningstekst(row["rubrik"]))
+              underrubrik = html.escape(rens_visningstekst(row["underrubrik"]))
+              url = html.escape(str(row["url"] or ""))
+
+              return f"""
+              <div style="background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px;margin:14px 0;box-shadow:0 2px 8px rgba(0,0,0,0.05);font-family:Arial,sans-serif;line-height:1.5;">
+                  <div style="font-size:12px;font-weight:bold;color:#c53030;margin-bottom:8px;text-transform:uppercase;">
+                      Midtjyllands Avis
+                  </div>
+                  <div style="font-size:20px;font-weight:700;margin-bottom:8px;color:#1a202c;">
+                      {titel}
+                  </div>
+                  <div style="font-size:14px;color:#2d3748;margin-bottom:14px;">
+                      {underrubrik}
+                  </div>
+                  <a href="{url}" target="_blank" style="display:inline-block;background:#c53030;color:#fff;text-decoration:none;padding:10px 14px;border-radius:10px;font-weight:600;">Læs artikel</a>
+              </div>
+              """
+
+
+          async def main():
+              df_udvalg = hent_udvalg()
+              df_alle_moedelinks = await hent_alle_moedelinks(df_udvalg)
+              df_hits_fuldtekst = await tjek_relevante_moeder(df_alle_moedelinks)
+
+              df_relevante_hits = df_hits_fuldtekst[
+                  (df_hits_fuldtekst["Funder"] == True) | (df_hits_fuldtekst["Lysbro"] == True)
+              ].copy()
+
+              df_silkeborg_app = await byg_silkeborg_appdata(df_relevante_hits)
+              df_silkeborg_app = df_silkeborg_app.drop_duplicates().reset_index(drop=True)
+
+              if not df_silkeborg_app.empty:
+                  df_silkeborg_app["dato_sort"] = df_silkeborg_app["dato"].apply(parse_dansk_dato)
+                  df_silkeborg_app = df_silkeborg_app.sort_values("dato_sort", ascending=False).reset_index(drop=True)
+
+              df_mja_app = await byg_mja_data()
+
+              nu = datetime.now().strftime("%d-%m-%Y kl. %H.%M")
+
+              html_output = f"""
+              <html>
+              <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <title>Overvågning: Nyt om Funder og Lysbro</title>
+                <style>
+                  body {{
+                    background:#f7fafc;
+                    margin:0;
+                    padding:0;
+                  }}
+                </style>
+              </head>
+              <body>
+              <div style="max-width:900px; margin:20px auto; padding:10px;">
+                  <h1 style="font-family:Arial,sans-serif;color:#1a202c;text-align:center;margin-bottom:14px;">
+                      Overvågning: Nyt om Funder og Lysbro
+                  </h1>
+                  <p style="font-family:Arial,sans-serif;color:#4a5568;text-align:center;line-height:1.6;max-width:760px;margin:0 auto 18px auto;">
+                      Overvågning af de seneste tilfælde, hvor Funder og/eller Lysbro nævnes på Silkeborg Kommunes dagsordener eller i artikler på Midtjyllands Avis' hjemmeside, som ikke er bag betalingsmur.
+                      <br>
+                      Denne side opdateres dagligt kl. 12 og kl. 18.
+                  </p>
+                  <p style="font-family:Arial,sans-serif;color:#4a5568;text-align:center;margin-top:0;margin-bottom:28px;">
+                      Sidst opdateret: {nu}
+                  </p>
+              </div>
+              """
+
+              if not df_silkeborg_app.empty:
+                  for _, row in df_silkeborg_app.iterrows():
+                      html_output += kort_html_kommune(row)
+
+              if not df_mja_app.empty:
+                  for _, row in df_mja_app.iterrows():
+                      html_output += kort_html_mja(row)
+
+              html_output += "</body></html>"
+
+              with open("index.html", "w", encoding="utf-8") as f:
+                  f.write(html_output)
+
+
+          asyncio.run(main())
+          PY
+
+          python build_site.py
+
+      - name: Commit og push index.html
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --staged --quiet || git commit -m "Automatisk opdatering af siden"
+          git push
