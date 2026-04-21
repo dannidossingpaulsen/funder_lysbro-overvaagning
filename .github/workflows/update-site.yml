@@ -36,10 +36,10 @@ jobs:
           import re
           import html
           import json
+          import os
           import requests
           import pandas as pd
           import asyncio
-          import os
           from datetime import datetime
           from bs4 import BeautifulSoup
           from urllib.parse import urljoin
@@ -59,6 +59,13 @@ jobs:
               txt = re.sub(r"\n{3,}", "\n\n", txt)
               txt = re.sub(r"[ \t]{2,}", " ", txt)
               return txt.strip()
+
+
+          def kort_tekst(txt, max_len=280):
+              txt = rens_visningstekst(txt)
+              if len(txt) <= max_len:
+                  return txt
+              return txt[:max_len].rstrip() + "…"
 
 
           def parse_dansk_dato(txt):
@@ -518,6 +525,8 @@ jobs:
                           "søgeord": row.get("søgeord", ""),
                           "titel": row.get("dagsordentitel", ""),
                           "undertitel": row.get("resume", ""),
+                          "udvalg": row.get("udvalg", ""),
+                          "dato": row.get("dato", ""),
                           "url": row.get("url", "")
                       })
 
@@ -529,6 +538,8 @@ jobs:
                           "søgeord": row.get("søgeord", ""),
                           "titel": row.get("rubrik", ""),
                           "undertitel": row.get("underrubrik", ""),
+                          "udvalg": "",
+                          "dato": "",
                           "url": row.get("url", "")
                       })
 
@@ -542,30 +553,45 @@ jobs:
 
           def send_notification_email(new_items):
               api_key = os.getenv("RESEND_API_KEY")
-              mail_to = os.getenv("MAIL_TO")
+              mail_to_raw = os.getenv("MAIL_TO", "")
 
-              if not api_key or not mail_to:
+              if not api_key or not mail_to_raw:
                   print("Mail-secrets mangler. Springer mail over.")
+                  return
+
+              recipients = [m.strip() for m in mail_to_raw.split(",") if m.strip()]
+              if not recipients:
+                  print("Ingen gyldige mailmodtagere. Springer mail over.")
                   return
 
               if not new_items:
                   print("Ingen nye hits. Sender ingen mail.")
                   return
 
+              vis_items = new_items[:10]
+              remaining_count = max(0, len(new_items) - len(vis_items))
+
               rows_html = []
-              for item in new_items[:20]:
+              for item in vis_items:
                   titel = html.escape(rens_visningstekst(item.get("titel", "")))
-                  undertitel = html.escape(rens_visningstekst(item.get("undertitel", "")))[:500]
+                  undertitel = html.escape(kort_tekst(item.get("undertitel", ""), 280))
                   kilde = html.escape(item.get("kilde", ""))
                   soegeord = html.escape(item.get("søgeord", ""))
+                  udvalg = html.escape(rens_visningstekst(item.get("udvalg", "")))
+                  dato = html.escape(rens_visningstekst(item.get("dato", "")))
                   url = html.escape(item.get("url", ""))
+
+                  meta_line = ""
+                  if udvalg or dato:
+                      meta_line = f'<div style="font-size:12px;color:#718096;margin-top:4px;">{udvalg} · {dato}</div>'
 
                   rows_html.append(f"""
                   <div style="margin-bottom:18px;padding:14px;border:1px solid #e2e8f0;border-radius:10px;">
                     <div style="font-size:12px;font-weight:bold;color:#4a5568;margin-bottom:6px;">
                       {kilde} · {soegeord}
                     </div>
-                    <div style="font-size:16px;font-weight:700;margin-bottom:8px;">
+                    {meta_line}
+                    <div style="font-size:16px;font-weight:700;margin:8px 0 8px 0;">
                       {titel}
                     </div>
                     <div style="font-size:14px;color:#2d3748;margin-bottom:10px;">
@@ -575,17 +601,26 @@ jobs:
                   </div>
                   """)
 
+              extra_html = ""
+              if remaining_count > 0:
+                  extra_html = f"""
+                  <p style="font-family:Arial,sans-serif;color:#4a5568;">
+                    Der er også {remaining_count} yderligere nye hit, som ikke er vist i denne mail.
+                  </p>
+                  """
+
               html_body = f"""
               <div style="font-family:Arial,sans-serif;max-width:700px;margin:auto;">
                 <h2>Nyt om Funder og Lysbro</h2>
                 <p>Der er fundet {len(new_items)} nye hit i den seneste kørsel.</p>
                 {''.join(rows_html)}
+                {extra_html}
               </div>
               """
 
               payload = {
                   "from": "Funder-Lysbro Overvågning <onboarding@resend.dev>",
-                  "to": [mail_to],
+                  "to": recipients,
                   "subject": f"Nyt om Funder og Lysbro ({len(new_items)} nye hit)",
                   "html": html_body
               }
@@ -628,7 +663,6 @@ jobs:
               current_items = build_current_state(df_silkeborg_app, df_mja_app)
               new_items = find_new_items(previous_items, current_items)
 
-              # første kørsel: gem state, men spam ikke med gammel bunke
               first_run = not os.path.exists(STATE_FILE)
 
               if first_run:
