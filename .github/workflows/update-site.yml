@@ -27,18 +27,26 @@ jobs:
           pip install pandas requests beautifulsoup4 playwright
           python -m playwright install chromium
 
-      - name: Byg hjemmeside
+      - name: Byg hjemmeside og send evt. mail
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
         run: |
           cat > build_site.py <<'PY'
           import re
           import html
+          import json
           import requests
           import pandas as pd
           import asyncio
+          import os
           from datetime import datetime
           from bs4 import BeautifulSoup
           from urllib.parse import urljoin
           from playwright.async_api import async_playwright
+
+
+          STATE_FILE = "latest_state.json"
 
 
           def rens_visningstekst(txt):
@@ -147,9 +155,6 @@ jobs:
                       })
 
               df = pd.DataFrame(rows).drop_duplicates().reset_index(drop=True)
-
-              # HASTIGHEDSFORBEDRING:
-              # Økonomiudvalget får lov at beholde 7 links, de øvrige 5.
               grænse = 7 if udvalg_navn == "Økonomiudvalget" else 5
               return df.head(grænse).to_dict("records")
 
@@ -295,7 +300,8 @@ jobs:
                           "dato": dato,
                           "resume": rens_visningstekst(resume_match.group(1)) if resume_match else "",
                           "indstilling": rens_visningstekst(indstilling_match.group(1)) if indstilling_match else "",
-                          "url": vis_url
+                          "url": vis_url,
+                          "kilde": "Silkeborg Kommune"
                       })
                   except Exception as e:
                       print(f"Fejl i punkt '{titel}': {e}")
@@ -396,11 +402,18 @@ jobs:
                   if not funder and not lysbro:
                       return None
 
+                  soegeord = []
+                  if funder:
+                      soegeord.append("Funder")
+                  if lysbro:
+                      soegeord.append("Lysbro")
+
                   return {
+                      "søgeord": ", ".join(soegeord),
                       "rubrik": titel,
                       "underrubrik": underrubrik,
                       "url": url,
-                      "kilde": "MJA"
+                      "kilde": "Midtjyllands Avis"
                   }
 
               except Exception as e:
@@ -477,6 +490,122 @@ jobs:
               """
 
 
+          def load_previous_state():
+              if not os.path.exists(STATE_FILE):
+                  return []
+              try:
+                  with open(STATE_FILE, "r", encoding="utf-8") as f:
+                      data = json.load(f)
+                      return data if isinstance(data, list) else []
+              except Exception as e:
+                  print(f"Kunne ikke læse state-fil: {e}")
+                  return []
+
+
+          def save_state(items):
+              with open(STATE_FILE, "w", encoding="utf-8") as f:
+                  json.dump(items, f, ensure_ascii=False, indent=2)
+
+
+          def build_current_state(df_silkeborg_app, df_mja_app):
+              items = []
+
+              if not df_silkeborg_app.empty:
+                  for _, row in df_silkeborg_app.iterrows():
+                      items.append({
+                          "id": f"kommune::{row['url']}::{row['dagsordentitel']}",
+                          "kilde": "Silkeborg Kommune",
+                          "søgeord": row.get("søgeord", ""),
+                          "titel": row.get("dagsordentitel", ""),
+                          "undertitel": row.get("resume", ""),
+                          "url": row.get("url", "")
+                      })
+
+              if not df_mja_app.empty:
+                  for _, row in df_mja_app.iterrows():
+                      items.append({
+                          "id": f"mja::{row['url']}::{row['rubrik']}",
+                          "kilde": "Midtjyllands Avis",
+                          "søgeord": row.get("søgeord", ""),
+                          "titel": row.get("rubrik", ""),
+                          "undertitel": row.get("underrubrik", ""),
+                          "url": row.get("url", "")
+                      })
+
+              return items
+
+
+          def find_new_items(previous_items, current_items):
+              previous_ids = {item["id"] for item in previous_items}
+              return [item for item in current_items if item["id"] not in previous_ids]
+
+
+          def send_notification_email(new_items):
+              api_key = os.getenv("RESEND_API_KEY")
+              mail_to = os.getenv("MAIL_TO")
+
+              if not api_key or not mail_to:
+                  print("Mail-secrets mangler. Springer mail over.")
+                  return
+
+              if not new_items:
+                  print("Ingen nye hits. Sender ingen mail.")
+                  return
+
+              rows_html = []
+              for item in new_items[:20]:
+                  titel = html.escape(rens_visningstekst(item.get("titel", "")))
+                  undertitel = html.escape(rens_visningstekst(item.get("undertitel", "")))[:500]
+                  kilde = html.escape(item.get("kilde", ""))
+                  soegeord = html.escape(item.get("søgeord", ""))
+                  url = html.escape(item.get("url", ""))
+
+                  rows_html.append(f"""
+                  <div style="margin-bottom:18px;padding:14px;border:1px solid #e2e8f0;border-radius:10px;">
+                    <div style="font-size:12px;font-weight:bold;color:#4a5568;margin-bottom:6px;">
+                      {kilde} · {soegeord}
+                    </div>
+                    <div style="font-size:16px;font-weight:700;margin-bottom:8px;">
+                      {titel}
+                    </div>
+                    <div style="font-size:14px;color:#2d3748;margin-bottom:10px;">
+                      {undertitel}
+                    </div>
+                    <a href="{url}">Åbn link</a>
+                  </div>
+                  """)
+
+              html_body = f"""
+              <div style="font-family:Arial,sans-serif;max-width:700px;margin:auto;">
+                <h2>Nyt om Funder og Lysbro</h2>
+                <p>Der er fundet {len(new_items)} nye hit i den seneste kørsel.</p>
+                {''.join(rows_html)}
+              </div>
+              """
+
+              payload = {
+                  "from": "Funder-Lysbro Overvågning <onboarding@resend.dev>",
+                  "to": [mail_to],
+                  "subject": f"Nyt om Funder og Lysbro ({len(new_items)} nye hit)",
+                  "html": html_body
+              }
+
+              try:
+                  response = requests.post(
+                      "https://api.resend.com/emails",
+                      headers={
+                          "Authorization": f"Bearer {api_key}",
+                          "Content-Type": "application/json"
+                      },
+                      json=payload,
+                      timeout=30
+                  )
+                  print("Mailstatus:", response.status_code)
+                  print(response.text)
+              except Exception as e:
+                  print(f"Fejl ved afsendelse af mail: {e}")
+
+
           async def main():
               df_udvalg = hent_udvalg()
               df_alle_moedelinks = await hent_alle_moedelinks(df_udvalg)
@@ -494,6 +623,20 @@ jobs:
                   df_silkeborg_app = df_silkeborg_app.sort_values("dato_sort", ascending=False).reset_index(drop=True)
 
               df_mja_app = await byg_mja_data()
+
+              previous_items = load_previous_state()
+              current_items = build_current_state(df_silkeborg_app, df_mja_app)
+              new_items = find_new_items(previous_items, current_items)
+
+              # første kørsel: gem state, men spam ikke med gammel bunke
+              first_run = not os.path.exists(STATE_FILE)
+
+              if first_run:
+                  print("Første kørsel: gemmer state uden at sende mail.")
+              else:
+                  send_notification_email(new_items)
+
+              save_state(current_items)
 
               nu = datetime.now().strftime("%d-%m-%Y kl. %H.%M")
 
@@ -546,10 +689,10 @@ jobs:
 
           python build_site.py
 
-      - name: Commit og push index.html
+      - name: Commit og push index.html + state
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
+          git add index.html latest_state.json
           git diff --staged --quiet || git commit -m "Automatisk opdatering af siden"
           git push
