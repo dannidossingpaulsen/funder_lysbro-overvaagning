@@ -10,21 +10,21 @@
     "url": "https://dagsordener.silkeborg.dk/vis?Dagsorden-Kultur--og-Fritidsudvalget-d.06-05-2026-kl.06.30&id=771f188d-43e5-43b3-923a-c4f7203f2ba4"
   },
   {
-    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Dagsorden-Plan-%2C-Vej--og-Trafikudvalget-d.05-05-2026-kl.10.00&id=b0c309cc-5f55-4b1f-a05e-f52ee70f764c::21. Godkendelse af budgetopfølgning for bevilling 24 Kollektiv trafik pr. 31. marts 2026",
-    "kilde": "Silkeborg Kommune",
-    "søgeord": "Lysbro",
-    "titel": "21. Godkendelse af budgetopfølgning for bevilling 24 Kollektiv trafik pr. 31. marts 2026",
-    "undertitel": "Plan-, Vej- og Trafikudvalget skal godkende resultatet af budgetopfølgningen, som er gennemført pr. 31. marts 2026 for bevilling 24 Kollektiv trafik.\n\nBudgetopfølgningen fremviser et forventet mindreforbrug på ca. 3,5 mio. kr. i 2026, og mindreforbruget skal tilskrives den gradvise normalisering af omkostningsindeks siden efteråret 2022.",
-    "udvalg": "Plan-, Vej- og Trafikudvalget",
-    "dato": "Tirsdag den 5. maj 2026 kl. 10.00",
-    "url": "https://dagsordener.silkeborg.dk/vis?Dagsorden-Plan-%2C-Vej--og-Trafikudvalget-d.05-05-2026-kl.10.00&id=b0c309cc-5f55-4b1f-a05e-f52ee70f764c"
-  },
-  {
     "id": "kommune::https://dagsordener.silkeborg.dk/vis?Dagsorden-Plan-%2C-Vej--og-Trafikudvalget-d.05-05-2026-kl.10.00&id=b0c309cc-5f55-4b1f-a05e-f52ee70f764c::24. Godkendelse af budgetopfølgning for anlæg på bevilling 25 Veje og bevilling 29 Byggemodning pr. 31. marts 2026",
     "kilde": "Silkeborg Kommune",
     "søgeord": "Lysbro",
     "titel": "24. Godkendelse af budgetopfølgning for anlæg på bevilling 25 Veje og bevilling 29 Byggemodning pr. 31. marts 2026",
     "undertitel": "Plan-, Vej- og Trafikudvalget skal godkende resultatet af budgetopfølgningen på anlægsområdet, som er gennemført pr. 31. marts 2026 for bevilling 25 Veje og bevilling 29 Byggemodning. Budgetopfølgningen tager ikke højde for ændringer og tilpasninger godkendt på byrådsmødet i april 2026.\n\nPå bevilling 25 Veje er der et forventet mindreforbrug på 73,419 mio. kr. og på bevilling 29 byggemodning er det forventede mindreforbrug på 71,224 mio. kr. i 2026.\n\nDet forventede mindreforbrug på bevilling 25 Veje skyldes flere anlægsprojekter. De største afvigelser findes på projekterne Søtorvet, forlægning af Christian 8. Vej og Søvej, Høje Kejlstrupvej, vejforlægning ved Eriksborg og Høje Kejlstrupvejs forlængelse, vejanlæg. På projekterne forventes et mindreforbrug på 53,920 mio. kr. Afvigelserne skyldes primært periodemæssige forskydninger i projektets økonomi.\n\nPå byggemodningsområdet er det forventede mindreforbrug ligeledes fordelt på flere projekter, men hvor f.eks. byggemodningsprojekterne i Eriksborg samlet set skiller sig ud med 24,953 mio. kr. pga. skæv periodisering. Teknik- og Miljøafdelingen arbejder på, at periodiseringen på Eriksborg-projekterne tilrettes efter 2. budgetopfølgning.",
+    "udvalg": "Plan-, Vej- og Trafikudvalget",
+    "dato": "Tirsdag den 5. maj 2026 kl. 10.00",
+    "url": "https://dagsordener.silkeborg.dk/vis?Dagsorden-Plan-%2C-Vej--og-Trafikudvalget-d.05-05-2026-kl.10.00&id=b0c309cc-5f55-4b1f-a05e-f52ee70f764c"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Dagsorden-Plan-%2C-Vej--og-Trafikudvalget-d.05-05-2026-kl.10.00&id=b0c309cc-5f55-4b1f-a05e-f52ee70f764c::21. Godkendelse af budgetopfølgning for bevilling 24 Kollektiv trafik pr. 31. marts 2026",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Lysbro",
+    "titel": "21. Godkendelse af budgetopfølgning for bevilling 24 Kollektiv trafik pr. 31. marts 2026",
+    "undertitel": "Plan-, Vej- og Trafikudvalget skal godkende resultatet af budgetopfølgningen, som er gennemført pr. 31. marts 2026 for bevilling 24 Kollektiv trafik.\n\nBudgetopfølgningen fremviser et forventet mindreforbrug på ca. 3,5 mio. kr. i 2026, og mindreforbruget skal tilskrives den gradvise normalisering af omkostningsindeks siden efteråret 2022.",
     "udvalg": "Plan-, Vej- og Trafikudvalget",
     "dato": "Tirsdag den 5. maj 2026 kl. 10.00",
     "url": "https://dagsordener.silkeborg.dk/vis?Dagsorden-Plan-%2C-Vej--og-Trafikudvalget-d.05-05-2026-kl.10.00&id=b0c309cc-5f55-4b1f-a05e-f52ee70f764c"
@@ -48,6 +48,16 @@
     "udvalg": "Økonomiudvalget",
     "dato": "Tirsdag den 5. maj 2026 kl. 06.30",
     "url": "https://dagsordener.silkeborg.dk/vis?Dagsorden-Oekonomiudvalget-d.05-05-2026-kl.06.30&id=c513444d-6315-4bfd-bc49-b4ea0b225589"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Byraadet-d.28-04-2026-kl.15.00&id=e2ba4327-1af2-4dea-b0ed-f0da1185cd14::18. Godkendelse af overdragelse af del af areal på Funder Skolevej",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder",
+    "titel": "18. Godkendelse af overdragelse af del af areal på Funder Skolevej",
+    "undertitel": "I forbindelse med planlægningen af hal 2 i Funder er der behov for matrikulære ændringer for den eksisterende hal kaldet Funderhallen. De matrikulære ændringer medfører, at kommunen overdrager 906 m2 fra nabomatriklen til kommunens ejerlejlighed i Funderhallen.",
+    "udvalg": "Byrådet",
+    "dato": "Tirsdag den 28. april 2026 kl. 15.00",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Byraadet-d.28-04-2026-kl.15.00&id=e2ba4327-1af2-4dea-b0ed-f0da1185cd14"
   },
   {
     "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.21-04-2026-kl.06.30&id=567933be-5330-4b91-a0ec-d7b8ed57a67c::9. Godkendelse af overdragelse af del af areal på Funder Skolevej",
@@ -90,6 +100,56 @@
     "url": "https://dagsordener.silkeborg.dk/vis?Referat-Dagtilbuds--og-Familieudvalget-d.08-04-2026-kl.07.45&id=9a390336-ea7d-477e-806c-10360157f4be"
   },
   {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.07-04-2026-kl.10.00&id=2610be8c-6302-4dab-a007-6bf071fe95ab::4. Drøftelse og beslutning om igangsætning af Lokalplan 14-021 for Funder Kirkeby",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder",
+    "titel": "4. Drøftelse og beslutning om igangsætning af Lokalplan 14-021 for Funder Kirkeby",
+    "undertitel": "Plan-, Vej- og Trafikudvalget skal beslutte, om Lokalplan 14-021 for Funder Kirkeby skal igangsættes, så hele Funder Kirkeby overføres til byzone.\n\nPlan- og Vejudvalget besluttede 1. april 2025 at igangsætte lokalplanen og besluttede at hele Funder Kirkeby skal overføres til byzone i den forbindelse. Planlægningen skal yderligere muliggøre ca. 40 nye boliger i den nordøstlige del af Funder Kirkeby inden for gældende kommuneplanrammer.\n\nIgangsætning af planen er i overensstemmelse med Plan- og Vejudvalgets seneste beslutning om prioritering af lokalplaner.\n\nBygherre for det nye boligområde er Patric Vogel. Grundejer er Funder Kirkeby Boligpark ApS. Derudover omfatter planen alle private grundejere i Funder Kirkeby samt Silkeborg Kommune.",
+    "udvalg": "Plan-, Vej- og Trafikudvalget",
+    "dato": "Tirsdag den 7. april 2026 kl. 10.00",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.07-04-2026-kl.10.00&id=2610be8c-6302-4dab-a007-6bf071fe95ab"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.07-04-2026-kl.10.00&id=2610be8c-6302-4dab-a007-6bf071fe95ab::11. Orientering om boligprogram 2026-2038",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder, Lysbro",
+    "titel": "11. Orientering om boligprogram 2026-2038",
+    "undertitel": "Boligprogram 2026-2038 fremlægges til orientering i Plan-, Vej- og Trafikudvalget. Boligprogrammet viser den forventede indflytning af nye boliger i Silkeborg Kommune fordelt på boligtype, årstal og område i perioden 2026-2038. Boligprogrammet indgår som en del af befolkningsprognosen og er en vigtig forudsætning for prognosens tal.\n\nSamtidig gives der i sagen en status på den faktiske indflytning af nye boliger for 2025.",
+    "udvalg": "Plan-, Vej- og Trafikudvalget",
+    "dato": "Tirsdag den 7. april 2026 kl. 10.00",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.07-04-2026-kl.10.00&id=2610be8c-6302-4dab-a007-6bf071fe95ab"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Byraadet-d.26-03-2026-kl.16.00&id=4fc0100a-64e7-4112-9d94-98f3875acb9a::12. Godkendelse af forhøjelse af anlægsbevilling til ny hal 2 i Funder",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder",
+    "titel": "12. Godkendelse af forhøjelse af anlægsbevilling til ny hal 2 i Funder",
+    "undertitel": "Der er behov for en ny hal 2 i Funder som følge af kapacitetsudfordringer i den eksisterende hal. Projekteringen er afsluttet, og der søges om forhøjelse af anlægsbevillingen med henblik på udbud og opførelse af hallen forventeligt frem til 2027. Anlægsbevillingen finansieres af de afsatte rådighedsbeløb i budget 2026-2027.",
+    "udvalg": "Byrådet",
+    "dato": "Torsdag den 26. marts 2026 kl. 16.00",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Byraadet-d.26-03-2026-kl.16.00&id=4fc0100a-64e7-4112-9d94-98f3875acb9a"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.17-03-2026-kl.07.30&id=fef0cd3d-47f4-4d2b-acc5-fa7e4c885908::3. Godkendelse af boligprogram 2026-2038",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder, Lysbro",
+    "titel": "3. Godkendelse af boligprogram 2026-2038",
+    "undertitel": "Boligprogram 2026-2038 fremlægges til godkendelse i Økonomiudvalget. Boligprogrammet viser den forventede indflytning af nye boliger i Silkeborg Kommune fordelt på boligtype, årstal og område i perioden 2026-2038. Boligprogrammet indgår som en del af befolkningsprognosen og er en vigtig forudsætning for prognosens tal.\n\nSamtidig gives der i sagen en status på den faktiske indflytning af nye boliger for 2025.",
+    "udvalg": "Økonomiudvalget",
+    "dato": "Tirsdag den 17. marts 2026 kl. 07.30",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.17-03-2026-kl.07.30&id=fef0cd3d-47f4-4d2b-acc5-fa7e4c885908"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.17-03-2026-kl.07.30&id=fef0cd3d-47f4-4d2b-acc5-fa7e4c885908::24. Godkendelse af forhøjelse af anlægsbevilling til ny hal 2 i Funder",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder",
+    "titel": "24. Godkendelse af forhøjelse af anlægsbevilling til ny hal 2 i Funder",
+    "undertitel": "Der er behov for en ny hal 2 i Funder som følge af kapacitetsudfordringer i den eksisterende hal. Projekteringen er afsluttet, og der søges om forhøjelse af anlægsbevillingen med henblik på udbud og opførelse af hallen forventeligt frem til 2027. Anlægsbevillingen finansieres af de afsatte rådighedsbeløb i budget 2026-2027.",
+    "udvalg": "Økonomiudvalget",
+    "dato": "Tirsdag den 17. marts 2026 kl. 07.30",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.17-03-2026-kl.07.30&id=fef0cd3d-47f4-4d2b-acc5-fa7e4c885908"
+  },
+  {
     "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Seniorraadet-d.11-03-2026-kl.11.00&id=d818eec5-a1d3-4a89-a56c-c2263db408e4::8. Orientering om status på lukning af plejecentre",
     "kilde": "Silkeborg Kommune",
     "søgeord": "Funder, Lysbro",
@@ -100,14 +160,64 @@
     "url": "https://dagsordener.silkeborg.dk/vis?Referat-Seniorraadet-d.11-03-2026-kl.11.00&id=d818eec5-a1d3-4a89-a56c-c2263db408e4"
   },
   {
-    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Naerheds--og-Landdistriktsudvalget-d.19-02-2026-kl.11.30&id=3503e16d-adfb-4ee8-b84f-c1524bc594e7::4. Drøftelse og beslutning om Nærheds- og Landdistriktsudvalgets årsplan 2026 på nærdemokratiområdet",
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Kultur--og-Fritidsudvalget-d.11-03-2026-kl.07.30&id=788957f9-ce3b-4177-9578-c19ccb37f494::3. Godkendelse af forhøjelse af anlægsbevilling til ny hal 2 i Funder",
     "kilde": "Silkeborg Kommune",
-    "søgeord": "Funder, Lysbro",
-    "titel": "4. Drøftelse og beslutning om Nærheds- og Landdistriktsudvalgets årsplan 2026 på nærdemokratiområdet",
-    "undertitel": "Nærheds- og Landdistriktsudvalget skal drøfte og træffe beslutning om udvalgets årsplan 2026 på nærdemokratiområdet.",
-    "udvalg": "Nærheds- og Landdistriktsudvalget",
-    "dato": "Torsdag den 19. februar 2026 kl. 11.30",
-    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Naerheds--og-Landdistriktsudvalget-d.19-02-2026-kl.11.30&id=3503e16d-adfb-4ee8-b84f-c1524bc594e7"
+    "søgeord": "Funder",
+    "titel": "3. Godkendelse af forhøjelse af anlægsbevilling til ny hal 2 i Funder",
+    "undertitel": "Der er behov for en ny hal 2 i Funder som følge af kapacitetsudfordringer i den eksisterende hal. Projekteringen er afsluttet, og der søges om forhøjelse af anlægsbevillingen med henblik på udbud og opførelse af hallen forventeligt frem til 2027. Anlægsbevillingen finansieres af de afsatte rådighedsbeløb i budget 2026-2027.",
+    "udvalg": "Kultur- og Fritidsudvalget",
+    "dato": "Onsdag den 11. marts 2026 kl. 07.30",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Kultur--og-Fritidsudvalget-d.11-03-2026-kl.07.30&id=788957f9-ce3b-4177-9578-c19ccb37f494"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.03-03-2026-kl.11.00&id=3baa8d1b-2c63-4433-b541-166314334f6d::16. Orientering om regnskab samt godkendelse af drifts- og anlægsoverførsler fra 2025 til 2026 på bevilling 25 Veje",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Lysbro",
+    "titel": "16. Orientering om regnskab samt godkendelse af drifts- og anlægsoverførsler fra 2025 til 2026 på bevilling 25 Veje",
+    "undertitel": "Plan-, Vej- og Trafikudvalget orienteres om regnskab 2025 og skal godkende drifts- og anlægsoverførsler fra 2025 til 2026 på bevilling 25 Veje.\n\nRegnskabsresultatet fremviser et samlet mindreforbrug på driften på 5,756 mio. kr. Mindreforbruget på driften skal overvejende tilskrives mindreforbrug på vintertjenesten, hvor udgifterne, særligt i de første måneder af 2025, var lave som følge af en relativt mild vinter.\n\nPå anlægsområdet fremviser regnskabet for 2025 et samlet mindreforbrug på 89,382 mio. kr. Det samlede mindreforbrug kan henføres til mindreforbrug på en række større anlægsprojekter i 2025, som Søtorvet, forlægning af Christian 8.s Vej og Søvej, Etablering af ny ringvejsbro over Gudenåen, Støjskærm ved Buskelund samt Supercykelsti fra Trafikterminalen til Lysbro.\n\nMed udgangspunkt i regnskabsresultatet og Silkeborg Kommunes økonomiske styringsstrategi er der udarbejdet forslag til drifts- og anlægsoverførsler fra 2025 til 2026.",
+    "udvalg": "Plan-, Vej- og Trafikudvalget",
+    "dato": "Tirsdag den 3. marts 2026 kl. 11.00",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.03-03-2026-kl.11.00&id=3baa8d1b-2c63-4433-b541-166314334f6d"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.03-03-2026-kl.11.00&id=3baa8d1b-2c63-4433-b541-166314334f6d::13. Godkendelse af anlægsregnskaber 2025 på bevilling 25 Veje",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder",
+    "titel": "13. Godkendelse af anlægsregnskaber 2025 på bevilling 25 Veje",
+    "undertitel": "Udvalget skal godkende de anlægsregnskaber, der er afsluttet ultimo 2025.\n\nDe anlægsregnskaber der afsluttes, har en samlet anlægsbevilling på netto 118,505 mio. kr. fordelt med 124,715 mio. kr. i udgift og 6,210 mio. kr. i indtægt. Det samlede forbrug er 96,866 mio. kr.\n\nDet samlede mindreforbrug på 21,639 mio. kr. på bevilling 25 Veje tilføres kassen.",
+    "udvalg": "Plan-, Vej- og Trafikudvalget",
+    "dato": "Tirsdag den 3. marts 2026 kl. 11.00",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.03-03-2026-kl.11.00&id=3baa8d1b-2c63-4433-b541-166314334f6d"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.03-03-2026-kl.11.00&id=3baa8d1b-2c63-4433-b541-166314334f6d::10. Drøftelse og beslutning om dispensation fra Lokalplan 14-002 i Funder",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder",
+    "titel": "10. Drøftelse og beslutning om dispensation fra Lokalplan 14-002 i Funder",
+    "undertitel": "Plan-, Vej- og Trafikudvalget skal tage stilling til en anmodning om dispensation fra Lokalplan 14-002 for erhvervsområde ved Skærskovhedevej vest for Funder til etablering af en entreprenørvirksomhed, bebyggelse indenfor byggelinje, oplag og parkering indenfor lokalplanens grønne bræmme mod Skærskovhedevej, beplantning af buske og træer indenfor den grønne bræmme samt til ikke at afskærme oplag mod Skærskovgårdsvej.\n\nDer er afholdt 14 dages naboorientering, og der er ikke indkommet høringssvar.\n\nTeknik- og Miljøafdelingen vurderer, at dispensation til at tillade bebyggelse i form af elementmur, oplag, parkering og placering af afskærmning vil danne præcedens for de øvrige virksomheder langs Skærskovhedevej. Det vurderes samtidig, at det vil være svært at sikre tilstrækkelig plads til et flerrækket afskærmende beplantningsbælte mellem afskærmning og matrikelgrænse.",
+    "udvalg": "Plan-, Vej- og Trafikudvalget",
+    "dato": "Tirsdag den 3. marts 2026 kl. 11.00",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.03-03-2026-kl.11.00&id=3baa8d1b-2c63-4433-b541-166314334f6d"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.03-03-2026-kl.11.00&id=3baa8d1b-2c63-4433-b541-166314334f6d::9. Drøftelse og beslutning om ansøgning om studieboliger på Lysbroparken 87",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Lysbro",
+    "titel": "9. Drøftelse og beslutning om ansøgning om studieboliger på Lysbroparken 87",
+    "undertitel": "Plan-, Vej og Trafikudvalget skal tage stilling til om ansøgningen om ændring af Lysbroparken 87, det forhenværende perronteater og gl. stationsbygning i Lysbro, skal imødekommes eller bearbejdes yderligere i dialog med Teknik- og Miljøafdelingen.",
+    "udvalg": "Plan-, Vej- og Trafikudvalget",
+    "dato": "Tirsdag den 3. marts 2026 kl. 11.00",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.03-03-2026-kl.11.00&id=3baa8d1b-2c63-4433-b541-166314334f6d"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.03-03-2026-kl.11.00&id=3baa8d1b-2c63-4433-b541-166314334f6d::4. Godkendelse af etablering af skolevejsprojekter 2026",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder",
+    "titel": "4. Godkendelse af etablering af skolevejsprojekter 2026",
+    "undertitel": "For at få flere børn og unge til at cykle skal trafiksikkerheden forbedres på kommunens skoleveje.\n\nTeknik- og Miljøafdelingen har været i dialog og besøgt alle skoler i kommunen i 2022. Det har resulteret i en række forslag, der kan forbedre trygheden og trafiksikkerheden på skolevejene samt på skolernes arealer. Forslagene fremgår i Cykelhandlingsplanens indsatsområde ”Skoleveje”. Cykelhandlingsplanen blev godkendt af det tidligere Plan- og Vejudvalg i maj 2023.\n\nDe fleste af skolevejsprojekterne på vejarealerne er realiseret i årene 2023-2025.\n\nUdvalget anbefales at igangsætte flere skolevejsprojekter i 2026.",
+    "udvalg": "Plan-, Vej- og Trafikudvalget",
+    "dato": "Tirsdag den 3. marts 2026 kl. 11.00",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.03-03-2026-kl.11.00&id=3baa8d1b-2c63-4433-b541-166314334f6d"
   },
   {
     "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Naerheds--og-Landdistriktsudvalget-d.19-02-2026-kl.11.30&id=3503e16d-adfb-4ee8-b84f-c1524bc594e7::6. Drøftelse og beslutning om evt. revision af kontaktpersonordning i forhold til lokalrådene",
@@ -115,6 +225,16 @@
     "søgeord": "Funder, Lysbro",
     "titel": "6. Drøftelse og beslutning om evt. revision af kontaktpersonordning i forhold til lokalrådene",
     "undertitel": "Nærheds- og Landdistriktsudvalget skal drøfte og beslutte om den kontaktpersonordning i forhold til lokalrådene, som Sundheds- og Nærhedsudvalget tidligere har godkendt, skal revideres og dermed fortsætte.",
+    "udvalg": "Nærheds- og Landdistriktsudvalget",
+    "dato": "Torsdag den 19. februar 2026 kl. 11.30",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Naerheds--og-Landdistriktsudvalget-d.19-02-2026-kl.11.30&id=3503e16d-adfb-4ee8-b84f-c1524bc594e7"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Naerheds--og-Landdistriktsudvalget-d.19-02-2026-kl.11.30&id=3503e16d-adfb-4ee8-b84f-c1524bc594e7::4. Drøftelse og beslutning om Nærheds- og Landdistriktsudvalgets årsplan 2026 på nærdemokratiområdet",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder, Lysbro",
+    "titel": "4. Drøftelse og beslutning om Nærheds- og Landdistriktsudvalgets årsplan 2026 på nærdemokratiområdet",
+    "undertitel": "Nærheds- og Landdistriktsudvalget skal drøfte og træffe beslutning om udvalgets årsplan 2026 på nærdemokratiområdet.",
     "udvalg": "Nærheds- og Landdistriktsudvalget",
     "dato": "Torsdag den 19. februar 2026 kl. 11.30",
     "url": "https://dagsordener.silkeborg.dk/vis?Referat-Naerheds--og-Landdistriktsudvalget-d.19-02-2026-kl.11.30&id=3503e16d-adfb-4ee8-b84f-c1524bc594e7"
@@ -140,16 +260,6 @@
     "url": "https://dagsordener.silkeborg.dk/vis?Referat-Seniorraadet-d.18-02-2026-kl.11.00&id=860721fe-e88c-40d5-b5b2-b378d25c2a7b"
   },
   {
-    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.17-02-2026-kl.07.30&id=1d850821-5bd4-4472-b02e-fedf845324a9::14. Drøftelse og beslutning om ændring af afstemningsområder",
-    "kilde": "Silkeborg Kommune",
-    "søgeord": "Lysbro",
-    "titel": "14. Drøftelse og beslutning om ændring af afstemningsområder",
-    "undertitel": "Byrådet besluttede 24. september 2024 at ændre antallet af afstemningsområder i Silkeborg Kommune fra 30 til 28. Som følge af erfaringerne fra seneste valg til kommunal- og regionsråd er Valgsekretariatet efterfølgende blevet anmodet om at undersøge mulighederne for yderligere reduktion af afstemningsområderne.",
-    "udvalg": "Økonomiudvalget",
-    "dato": "Tirsdag den 17. februar 2026 kl. 07.30",
-    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.17-02-2026-kl.07.30&id=1d850821-5bd4-4472-b02e-fedf845324a9"
-  },
-  {
     "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.17-02-2026-kl.07.30&id=1d850821-5bd4-4472-b02e-fedf845324a9::18. Drøftelse og beslutning om igangsætning af tillæg 72 til Kommuneplan 2020-2032 og delvis aflysning af Lokalplan 14-012, Erhvervsområde ved motorvejsudfletning i Funder",
     "kilde": "Silkeborg Kommune",
     "søgeord": "Funder",
@@ -160,14 +270,54 @@
     "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.17-02-2026-kl.07.30&id=1d850821-5bd4-4472-b02e-fedf845324a9"
   },
   {
-    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.20-01-2026-kl.15.00&id=9239eda3-6ae4-49d5-9f21-42c75c2f9372::17. Godkendelse af anlægsbevilling til byggemodningspulje til undersøgelser, færdiggørelser, ad hoc mv. for 2026",
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.17-02-2026-kl.07.30&id=1d850821-5bd4-4472-b02e-fedf845324a9::14. Drøftelse og beslutning om ændring af afstemningsområder",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Lysbro",
+    "titel": "14. Drøftelse og beslutning om ændring af afstemningsområder",
+    "undertitel": "Byrådet besluttede 24. september 2024 at ændre antallet af afstemningsområder i Silkeborg Kommune fra 30 til 28. Som følge af erfaringerne fra seneste valg til kommunal- og regionsråd er Valgsekretariatet efterfølgende blevet anmodet om at undersøge mulighederne for yderligere reduktion af afstemningsområderne.",
+    "udvalg": "Økonomiudvalget",
+    "dato": "Tirsdag den 17. februar 2026 kl. 07.30",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.17-02-2026-kl.07.30&id=1d850821-5bd4-4472-b02e-fedf845324a9"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Kultur--og-Fritidsudvalget-d.04-02-2026-kl.07.30&id=08b7addf-a87c-4331-b3e2-6ea1910512fa::7. Godkendelse af tilskud til vedligeholdelse af forsamlingshuse 2026",
     "kilde": "Silkeborg Kommune",
     "søgeord": "Funder",
-    "titel": "17. Godkendelse af anlægsbevilling til byggemodningspulje til undersøgelser, færdiggørelser, ad hoc mv. for 2026",
+    "titel": "7. Godkendelse af tilskud til vedligeholdelse af forsamlingshuse 2026",
+    "undertitel": "Hvert år kan forsamlingshusene i Silkeborg Kommune søge om tilskud til vedligeholdelse og renovering af forsamlingshusene. Der kan maksimalt bevilges tilskud på 50 % af udgiften til bygningsvedligeholdelse. Derudover kan Kultur- og Fritidsudvalget ved ansøgninger under 10.000 kr. dispensere fra retningslinjerne og dække op til hele beløbet. Der er 16 forsamlingshuse som har søgt om tilskud i 2026",
+    "udvalg": "Kultur- og Fritidsudvalget",
+    "dato": "Onsdag den 4. februar 2026 kl. 07.30",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Kultur--og-Fritidsudvalget-d.04-02-2026-kl.07.30&id=08b7addf-a87c-4331-b3e2-6ea1910512fa"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.03-02-2026-kl.11.00&id=57490341-4528-4af4-94b7-6ac320177671::4. Drøftelse og beslutning om igangsætning af tillæg 72 til Kommuneplan 2020-2032 og delvis aflysning af Lokalplan 14-012, Erhvervsområde ved motorvejsudfletning i Funder",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder",
+    "titel": "4. Drøftelse og beslutning om igangsætning af tillæg 72 til Kommuneplan 2020-2032 og delvis aflysning af Lokalplan 14-012, Erhvervsområde ved motorvejsudfletning i Funder",
+    "undertitel": "Økonomiudvalget skal beslutte om der skal igangsættes et tillæg nr. 72 til Kommuneplan 2020-2032 og en delvis aflysning af Lokalplan 14-012, Erhvervsområde ved motorvejsudfletning i Funder.\n\n \n\nPlanlægningen skal fjerne mulighederne for størstedelen af matr.nr. 64a Funder By, Funder til anvendelse af erhvervsområde og tilbageføre til landzone.\n\n \n\nMatr.nr. 64a Funder By, Funder er kommunalt ejet og er forpagtet ud til landbrugsmæssig drift (mark).",
+    "udvalg": "Plan-, Vej- og Trafikudvalget",
+    "dato": "Tirsdag den 3. februar 2026 kl. 11.00",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.03-02-2026-kl.11.00&id=57490341-4528-4af4-94b7-6ac320177671"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Byraadet-d.27-01-2026-kl.16.00&id=d2a55e63-271f-4250-ba22-e8a93e1fa67e::10. Godkendelse af anlægsbevilling til energibesparende projekter 2026",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Lysbro",
+    "titel": "10. Godkendelse af anlægsbevilling til energibesparende projekter 2026",
+    "undertitel": "Byrådet skal tage stilling til om anlægsbevilling på 8,0 mio. kr. til energibesparende projekter i kommunale ejendomme i 2026, kan godkendes.\n\nDer vil i 2026 blive prioriteret projekter vedrørende renovering af ventilationsanlæg, AI-styring, et vandspareprojekt, efterisolering af tagkonstruktioner samt udskiftning til LED-belysning.",
+    "udvalg": "Byrådet",
+    "dato": "Tirsdag den 27. januar 2026 kl. 16.00",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Byraadet-d.27-01-2026-kl.16.00&id=d2a55e63-271f-4250-ba22-e8a93e1fa67e"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Byraadet-d.27-01-2026-kl.16.00&id=d2a55e63-271f-4250-ba22-e8a93e1fa67e::9. Godkendelse af anlægsbevilling til byggemodningspulje til undersøgelser, færdiggørelser, ad hoc mv. for 2026",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder",
+    "titel": "9. Godkendelse af anlægsbevilling til byggemodningspulje til undersøgelser, færdiggørelser, ad hoc mv. for 2026",
     "undertitel": "I budget 2026 er der afsat 3,0 mio. kr. til at afdække undersøgelser, færdiggørelser, tilslutningsbidrag og mindre ad hoc-opgaver/-projekter i forbindelse med kommunale byggemodninger.",
-    "udvalg": "Økonomiudvalget",
-    "dato": "Tirsdag den 20. januar 2026 kl. 15.00",
-    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.20-01-2026-kl.15.00&id=9239eda3-6ae4-49d5-9f21-42c75c2f9372"
+    "udvalg": "Byrådet",
+    "dato": "Tirsdag den 27. januar 2026 kl. 16.00",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Byraadet-d.27-01-2026-kl.16.00&id=d2a55e63-271f-4250-ba22-e8a93e1fa67e"
   },
   {
     "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.20-01-2026-kl.15.00&id=9239eda3-6ae4-49d5-9f21-42c75c2f9372::6. Godkendelse af anlægsbevilling til energibesparende projekter 2026",
@@ -175,6 +325,16 @@
     "søgeord": "Lysbro",
     "titel": "6. Godkendelse af anlægsbevilling til energibesparende projekter 2026",
     "undertitel": "Byrådet skal tage stilling til om anlægsbevilling på 8,0 mio. kr. til energibesparende projekter i kommunale ejendomme i 2026, kan godkendes.\n\nDer vil i 2026 blive prioriteret projekter vedrørende renovering af ventilationsanlæg, AI-styring, et vandspareprojekt, efterisolering af tagkonstruktioner samt udskiftning til LED-belysning.",
+    "udvalg": "Økonomiudvalget",
+    "dato": "Tirsdag den 20. januar 2026 kl. 15.00",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.20-01-2026-kl.15.00&id=9239eda3-6ae4-49d5-9f21-42c75c2f9372"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.20-01-2026-kl.15.00&id=9239eda3-6ae4-49d5-9f21-42c75c2f9372::17. Godkendelse af anlægsbevilling til byggemodningspulje til undersøgelser, færdiggørelser, ad hoc mv. for 2026",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder",
+    "titel": "17. Godkendelse af anlægsbevilling til byggemodningspulje til undersøgelser, færdiggørelser, ad hoc mv. for 2026",
+    "undertitel": "I budget 2026 er der afsat 3,0 mio. kr. til at afdække undersøgelser, færdiggørelser, tilslutningsbidrag og mindre ad hoc-opgaver/-projekter i forbindelse med kommunale byggemodninger.",
     "udvalg": "Økonomiudvalget",
     "dato": "Tirsdag den 20. januar 2026 kl. 15.00",
     "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.20-01-2026-kl.15.00&id=9239eda3-6ae4-49d5-9f21-42c75c2f9372"
@@ -188,6 +348,16 @@
     "udvalg": "Seniorrådet",
     "dato": "Torsdag den 15. januar 2026 kl. 11.00",
     "url": "https://dagsordener.silkeborg.dk/vis?Referat-Seniorraadet-d.15-01-2026-kl.11.00&id=aca281bb-1215-4f04-9b7a-e24c4be1a916"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Socialudvalget-d.07-01-2026-kl.16.15&id=0912669d-dbd2-458a-95bf-e5794d864c4c::4. Til orientering",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Lysbro",
+    "titel": "4. Til orientering",
+    "undertitel": "",
+    "udvalg": "Socialudvalget",
+    "dato": "Onsdag den 7. januar 2026 kl. 16.15",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Socialudvalget-d.07-01-2026-kl.16.15&id=0912669d-dbd2-458a-95bf-e5794d864c4c"
   },
   {
     "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Plan-%2C-Vej--og-Trafikudvalget-d.06-01-2026-kl.14.30&id=fcbda21f-935b-4932-91d4-08b64d793576::7. Godkendelse af anlægsbevilling til byggemodningspulje til undersøgelser, færdiggørelser, ad hoc mv. for 2026",
@@ -204,7 +374,7 @@
     "kilde": "Midtjyllands Avis",
     "søgeord": "Lysbro",
     "titel": "Debat: »Lysbro station og grøn omstilling«",
-    "undertitel": "Udgivet: I dag kl. 13.28 Læsetid: 1 minut Pia Ipsen og Leif Mørk Lysbroparken, Silkeoborg BYGGERI På Silkeborg kommunes hjemmeside kan man læse, at der skal satses på reduktion af klimaaftryk, og at der er store besparelser at hente ved at tænke bæredygtighed ind i byggeprojekter. Når man læser GJ Finance Group Aps projektbeskrivelse angående nedrivning og ombygning af Lysbro Station til ungdomsboliger, er der intet som peger i retning af bæredygtighed. Har man i plan-vej og trafikudvalget overh",
+    "undertitel": "Udgivet: I går kl. 13.28 Læsetid: 1 minut Pia Ipsen og Leif Mørk Lysbroparken, Silkeoborg BYGGERI På Silkeborg kommunes hjemmeside kan man læse, at der skal satses på reduktion af klimaaftryk, og at der er store besparelser at hente ved at tænke bæredygtighed ind i byggeprojekter. Når man læser GJ Finance Group Aps projektbeskrivelse angående nedrivning og ombygning af Lysbro Station til ungdomsboliger, er der intet som peger i retning af bæredygtighed. Har man i plan-vej og trafikudvalget overh",
     "udvalg": "",
     "dato": "",
     "url": "https://mja.dk/artikel/457b80cb-7bb0-412b-afb5-ebe1918bcfe7"
