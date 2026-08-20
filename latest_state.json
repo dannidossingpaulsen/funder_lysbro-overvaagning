@@ -1,5 +1,15 @@
 [
   {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Dagsorden-Byraadet-d.25-08-2026-kl.15.00&id=671fcfd9-3da9-450d-9ca8-c8442620661b::15. Godkendelse af tillægsbevillinger på baggrund af budgetopfølgningen 31. maj 2026",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder",
+    "titel": "15. Godkendelse af tillægsbevillinger på baggrund af budgetopfølgningen 31. maj 2026",
+    "undertitel": "Der er pr. 31. maj 2026 foretaget budgetopfølgning i fagudvalgene. I denne sag godkendes tillægsbevillinger og anlægsbevillinger.\n\nDer bliver givet tillægsbevillinger i 2026, som samlet påvirker kassebeholdningen positivt med 42,3 mio. kr.",
+    "udvalg": "Byrådet",
+    "dato": "Tirsdag den 25. august 2026 kl. 15.00",
+    "url": "https://dagsordener.silkeborg.dk/vis?Dagsorden-Byraadet-d.25-08-2026-kl.15.00&id=671fcfd9-3da9-450d-9ca8-c8442620661b"
+  },
+  {
     "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.18-08-2026-kl.06.30&id=5706ddeb-7968-42d9-8304-c29113eba1ca::42. Orientering om sundhedsreformen",
     "kilde": "Silkeborg Kommune",
     "søgeord": "Lysbro",
@@ -10,21 +20,21 @@
     "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.18-08-2026-kl.06.30&id=5706ddeb-7968-42d9-8304-c29113eba1ca"
   },
   {
-    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.18-08-2026-kl.06.30&id=5706ddeb-7968-42d9-8304-c29113eba1ca::22. Drøftelse og beslutning om prioritering af lokalplanlægning for 3. og 4. kvartal 2026",
-    "kilde": "Silkeborg Kommune",
-    "søgeord": "Funder, Lysbro",
-    "titel": "22. Drøftelse og beslutning om prioritering af lokalplanlægning for 3. og 4. kvartal 2026",
-    "undertitel": "Sagen giver Plan-, Vej- og Trafikudvalget og Økonomiudvalget en samlet status på lokalplanlægningen i Silkeborg Kommune. Status omfatter vedtagne og afsluttede lokalplaner i 2026, igangværende lokalplaner, forhåndsdialoger samt forslag til nye lokalplaner, der kan bemandes i 3. og 4. kvartal 2026.\n\nFormålet er at skabe et tydeligt politisk beslutningsgrundlag for prioriteringen af lokalplanressourcerne. Sagen synliggør den aktuelle kapacitet og de planmæssige forhold, der har betydning for, hvornår lokalplanerne kan igangsættes.\n\nPlan-, Vej- og Trafikudvalget skal drøfte og beslutte, hvilke lokalplaner der prioriteres til bemanding i 3. og 4. kvartal 2026. Økonomiudvalget skal beslutte de lokalplaner, hvor der også er behov for kommuneplantillæg. Sagen indeholder desuden en vurdering af Grauballe Øst, hvor administrationen anbefaler, at lokalplanlægningen tidligst bemandes, når kommuneplantillægget for Grauballe er foreløbigt vedtaget og sendt i offentlig høring.\n\nNæste samlede status forelægges i december 2026. Der er vedlagt et bilag med en samlet oversigt over lokalplanlægningen.",
-    "udvalg": "Økonomiudvalget",
-    "dato": "Tirsdag den 18. august 2026 kl. 06.30",
-    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.18-08-2026-kl.06.30&id=5706ddeb-7968-42d9-8304-c29113eba1ca"
-  },
-  {
     "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.18-08-2026-kl.06.30&id=5706ddeb-7968-42d9-8304-c29113eba1ca::4. Godkendelse af tillægsbevillinger på baggrund af budgetopfølgningen 31. maj 2026",
     "kilde": "Silkeborg Kommune",
     "søgeord": "Funder",
     "titel": "4. Godkendelse af tillægsbevillinger på baggrund af budgetopfølgningen 31. maj 2026",
     "undertitel": "Der er pr. 31. maj 2026 foretaget budgetopfølgning i fagudvalgene. I denne sag godkendes tillægsbevillinger og anlægsbevillinger.\n\nDer bliver givet tillægsbevillinger i 2026, som samlet påvirker kassebeholdningen positivt med 42,3 mio. kr.",
+    "udvalg": "Økonomiudvalget",
+    "dato": "Tirsdag den 18. august 2026 kl. 06.30",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.18-08-2026-kl.06.30&id=5706ddeb-7968-42d9-8304-c29113eba1ca"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.18-08-2026-kl.06.30&id=5706ddeb-7968-42d9-8304-c29113eba1ca::22. Drøftelse og beslutning om prioritering af lokalplanlægning for 3. og 4. kvartal 2026",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder, Lysbro",
+    "titel": "22. Drøftelse og beslutning om prioritering af lokalplanlægning for 3. og 4. kvartal 2026",
+    "undertitel": "Sagen giver Plan-, Vej- og Trafikudvalget og Økonomiudvalget en samlet status på lokalplanlægningen i Silkeborg Kommune. Status omfatter vedtagne og afsluttede lokalplaner i 2026, igangværende lokalplaner, forhåndsdialoger samt forslag til nye lokalplaner, der kan bemandes i 3. og 4. kvartal 2026.\n\nFormålet er at skabe et tydeligt politisk beslutningsgrundlag for prioriteringen af lokalplanressourcerne. Sagen synliggør den aktuelle kapacitet og de planmæssige forhold, der har betydning for, hvornår lokalplanerne kan igangsættes.\n\nPlan-, Vej- og Trafikudvalget skal drøfte og beslutte, hvilke lokalplaner der prioriteres til bemanding i 3. og 4. kvartal 2026. Økonomiudvalget skal beslutte de lokalplaner, hvor der også er behov for kommuneplantillæg. Sagen indeholder desuden en vurdering af Grauballe Øst, hvor administrationen anbefaler, at lokalplanlægningen tidligst bemandes, når kommuneplantillægget for Grauballe er foreløbigt vedtaget og sendt i offentlig høring.\n\nNæste samlede status forelægges i december 2026. Der er vedlagt et bilag med en samlet oversigt over lokalplanlægningen.",
     "udvalg": "Økonomiudvalget",
     "dato": "Tirsdag den 18. august 2026 kl. 06.30",
     "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.18-08-2026-kl.06.30&id=5706ddeb-7968-42d9-8304-c29113eba1ca"
@@ -120,16 +130,6 @@
     "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.11-08-2026-kl.06.30&id=5a677ba7-f6e7-4ec1-b213-3567813e9db3"
   },
   {
-    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Byraadet-d.23-06-2026-kl.13.30&id=8938c258-0b98-48f8-a80c-5a3441d0b3e6::8. Godkendelse af forslag til tillæg nr. 72 til Kommuneplan 2020-2032 og Lokalplan 00-027 - delvis aflysning af Lokalplan 14-012 Erhvervsområde ved motorvejsudfletning i Funder",
-    "kilde": "Silkeborg Kommune",
-    "søgeord": "Funder",
-    "titel": "8. Godkendelse af forslag til tillæg nr. 72 til Kommuneplan 2020-2032 og Lokalplan 00-027 - delvis aflysning af Lokalplan 14-012 Erhvervsområde ved motorvejsudfletning i Funder",
-    "undertitel": "Byrådet skal beslutte om forslag til tillæg nr. 72 til Kommuneplan 2020-20232 og forslag til Lokalplan 00-027 – delvis aflysning af Lokalplan 14-012 Erhvervsområde ved motorvejsudfletning i Funder skal godkendes. Planforslagene skal sendes i offentlig høring i 4 uger.\n\nPlanforsalgene kan findes her på lokalplanportalen. Lokalplanen findes her.\n\nPlanlægningen skal fjerne mulighederne for størstedelen af matr.nr. 64a Funder By, Funder til anvendelse af erhvervsområde og tilbageføre til landzone.\n\nMatr.nr. 64a Funder By, Funder er kommunalt ejet og er forpagtet ud til landbrugsmæssig drift (mark).",
-    "udvalg": "Byrådet",
-    "dato": "Tirsdag den 23. juni 2026 kl. 13.30",
-    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Byraadet-d.23-06-2026-kl.13.30&id=8938c258-0b98-48f8-a80c-5a3441d0b3e6"
-  },
-  {
     "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Byraadet-d.23-06-2026-kl.13.30&id=8938c258-0b98-48f8-a80c-5a3441d0b3e6::17. Godkendelse af anlægsbevilling til kunstgræsbaner i Virklund og Funder",
     "kilde": "Silkeborg Kommune",
     "søgeord": "Funder",
@@ -140,14 +140,14 @@
     "url": "https://dagsordener.silkeborg.dk/vis?Referat-Byraadet-d.23-06-2026-kl.13.30&id=8938c258-0b98-48f8-a80c-5a3441d0b3e6"
   },
   {
-    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.16-06-2026-kl.06.15&id=612404f6-bdb9-4bc4-bd6b-16dd7d2cf0e3::23. Godkendelse af forslag til tillæg nr. 72 til Kommuneplan 2020-2032 og Lokalplan 00-027 - delvis aflysning af Lokalplan 14-012 Erhvervsområde ved motorvejsudfletning i Funder",
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Byraadet-d.23-06-2026-kl.13.30&id=8938c258-0b98-48f8-a80c-5a3441d0b3e6::8. Godkendelse af forslag til tillæg nr. 72 til Kommuneplan 2020-2032 og Lokalplan 00-027 - delvis aflysning af Lokalplan 14-012 Erhvervsområde ved motorvejsudfletning i Funder",
     "kilde": "Silkeborg Kommune",
     "søgeord": "Funder",
-    "titel": "23. Godkendelse af forslag til tillæg nr. 72 til Kommuneplan 2020-2032 og Lokalplan 00-027 - delvis aflysning af Lokalplan 14-012 Erhvervsområde ved motorvejsudfletning i Funder",
+    "titel": "8. Godkendelse af forslag til tillæg nr. 72 til Kommuneplan 2020-2032 og Lokalplan 00-027 - delvis aflysning af Lokalplan 14-012 Erhvervsområde ved motorvejsudfletning i Funder",
     "undertitel": "Byrådet skal beslutte om forslag til tillæg nr. 72 til Kommuneplan 2020-20232 og forslag til Lokalplan 00-027 – delvis aflysning af Lokalplan 14-012 Erhvervsområde ved motorvejsudfletning i Funder skal godkendes. Planforslagene skal sendes i offentlig høring i 4 uger.\n\nPlanforsalgene kan findes her på lokalplanportalen. Lokalplanen findes her.\n\nPlanlægningen skal fjerne mulighederne for størstedelen af matr.nr. 64a Funder By, Funder til anvendelse af erhvervsområde og tilbageføre til landzone.\n\nMatr.nr. 64a Funder By, Funder er kommunalt ejet og er forpagtet ud til landbrugsmæssig drift (mark).",
-    "udvalg": "Økonomiudvalget",
-    "dato": "Tirsdag den 16. juni 2026 kl. 06.15",
-    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.16-06-2026-kl.06.15&id=612404f6-bdb9-4bc4-bd6b-16dd7d2cf0e3"
+    "udvalg": "Byrådet",
+    "dato": "Tirsdag den 23. juni 2026 kl. 13.30",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Byraadet-d.23-06-2026-kl.13.30&id=8938c258-0b98-48f8-a80c-5a3441d0b3e6"
   },
   {
     "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.16-06-2026-kl.06.15&id=612404f6-bdb9-4bc4-bd6b-16dd7d2cf0e3::10. Godkendelse af anlægsbevilling til kunstgræsbaner i Virklund og Funder",
@@ -155,6 +155,16 @@
     "søgeord": "Funder",
     "titel": "10. Godkendelse af anlægsbevilling til kunstgræsbaner i Virklund og Funder",
     "undertitel": "Der er i budget 2026-2035 afsat 9 mio. kr., periodiseret med 4,5 mio. kr. 2026 og 4,5 mio. kr. i 2027, til anlæggelse af kunstgræsbaner i Virklund og Funder.\n\nProjektet har været udbudt i licitation og resultatet heraf viser, at projektet ikke kan etableres inden for det afsatte rådighedsbeløb. Der skal derfor træffes politisk beslutning om, hvorvidt projektet skal gennemføres med de ændrede økonomiske vilkår, at projektet kræver yderligere finansiering i form af en kassefinansieret tillægsbevilling på 2,5 mio. kr.\n\nBåde banen i Virklund og i Funder forventes anlagt i 2026. Der søges derfor også en fremrykning af det afsatte rådighedsbeløb i 2027 til 2026.",
+    "udvalg": "Økonomiudvalget",
+    "dato": "Tirsdag den 16. juni 2026 kl. 06.15",
+    "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.16-06-2026-kl.06.15&id=612404f6-bdb9-4bc4-bd6b-16dd7d2cf0e3"
+  },
+  {
+    "id": "kommune::https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.16-06-2026-kl.06.15&id=612404f6-bdb9-4bc4-bd6b-16dd7d2cf0e3::23. Godkendelse af forslag til tillæg nr. 72 til Kommuneplan 2020-2032 og Lokalplan 00-027 - delvis aflysning af Lokalplan 14-012 Erhvervsområde ved motorvejsudfletning i Funder",
+    "kilde": "Silkeborg Kommune",
+    "søgeord": "Funder",
+    "titel": "23. Godkendelse af forslag til tillæg nr. 72 til Kommuneplan 2020-2032 og Lokalplan 00-027 - delvis aflysning af Lokalplan 14-012 Erhvervsområde ved motorvejsudfletning i Funder",
+    "undertitel": "Byrådet skal beslutte om forslag til tillæg nr. 72 til Kommuneplan 2020-20232 og forslag til Lokalplan 00-027 – delvis aflysning af Lokalplan 14-012 Erhvervsområde ved motorvejsudfletning i Funder skal godkendes. Planforslagene skal sendes i offentlig høring i 4 uger.\n\nPlanforsalgene kan findes her på lokalplanportalen. Lokalplanen findes her.\n\nPlanlægningen skal fjerne mulighederne for størstedelen af matr.nr. 64a Funder By, Funder til anvendelse af erhvervsområde og tilbageføre til landzone.\n\nMatr.nr. 64a Funder By, Funder er kommunalt ejet og er forpagtet ud til landbrugsmæssig drift (mark).",
     "udvalg": "Økonomiudvalget",
     "dato": "Tirsdag den 16. juni 2026 kl. 06.15",
     "url": "https://dagsordener.silkeborg.dk/vis?Referat-Oekonomiudvalget-d.16-06-2026-kl.06.15&id=612404f6-bdb9-4bc4-bd6b-16dd7d2cf0e3"
