@@ -44,6 +44,7 @@ jobs:
           import pandas as pd
           import asyncio
           from datetime import datetime
+          from zoneinfo import ZoneInfo
           from bs4 import BeautifulSoup
           from urllib.parse import urljoin
           from playwright.async_api import async_playwright
@@ -767,9 +768,12 @@ jobs:
               else:
                   send_notification_email(new_items)
 
-              save_state(current_items)
+              # Behold historiske fund, selv hvis en kilde midlertidigt fejler.
+              alle_kendte = {item["id"]: item for item in previous_items}
+              alle_kendte.update({item["id"]: item for item in current_items})
+              save_state(list(alle_kendte.values()))
 
-              nu = datetime.now().strftime("%d-%m-%Y kl. %H.%M")
+              nu = datetime.now(ZoneInfo("Europe/Copenhagen")).strftime("%d-%m-%Y kl. %H.%M")
 
               html_output = f"""
               <html>
