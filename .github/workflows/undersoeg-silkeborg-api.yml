@@ -1,4 +1,4 @@
-name: Undersoeg Silkeborg API
+name: Undersoeg Silkeborg moedeindhold API
 
 on:
   workflow_dispatch:
@@ -7,8 +7,9 @@ permissions:
   contents: read
 
 jobs:
-  undersoeg-api:
+  undersoeg-moedeindhold:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Installer Python
         uses: actions/setup-python@v5
@@ -16,46 +17,58 @@ jobs:
           python-version: '3.11'
       - name: Installer requests
         run: pip install requests
-      - name: Undersoeg udvalgslisten og moedernes struktur
+      - name: Test om et moede-ID giver adgang til dagsordenspunkter
         run: |
           python - <<'PY'
-          import json, requests, time
-          from collections import Counter
+          import json
+          import requests
+          from urllib.parse import quote
 
-          URL = 'https://dagsordener.silkeborg.dk/api/agenda/udvalgsliste'
-          s = requests.Session()
-          s.headers.update({'Accept': 'application/json', 'User-Agent': 'Funder-Lysbro-API-diagnose/1.0'})
-          response = s.get(URL, timeout=(10, 30))
-          print('API HTTP:', response.status_code, 'Content-Type:', response.headers.get('Content-Type'), flush=True)
-          response.raise_for_status()
-          try:
-              data = response.json()
-          except ValueError:
-              print('API svarede ikke med JSON. De foerste 350 tegn:', response.text[:350], flush=True)
-              raise SystemExit('API-format skal undersoeges foer omlægning')
-          print('Topniveau-felter:', list(data) if isinstance(data, dict) else type(data).__name__, flush=True)
-          groups = data.get('Udvalg', {}) if isinstance(data, dict) else {}
-          if not isinstance(groups, dict):
-              raise SystemExit('Ukendt struktur i Udvalg')
-          print('Grupper:', list(groups), flush=True)
-          udvalg = [u for g in groups.values() if isinstance(g, list) for u in g if isinstance(u, dict)]
-          print('Antal udvalg:', len(udvalg), flush=True)
-          print('Udvalgsfelter:', sorted({k for u in udvalg for k in u}), flush=True)
-          for u in udvalg:
-              navn = u.get('Navn', '')
-              if navn not in ('Plan-, Vej- og Trafikudvalget', 'Nærheds- og Landdistriktsudvalget', 'Økonomiudvalget', 'Byrådet'):
-                  continue
-              print('\nUDVALG:', navn, 'id:', u.get('Id'), flush=True)
-              for key, value in u.items():
-                  if key in ('Navn', 'Id'): continue
-                  if isinstance(value, list):
-                      print('  Felt:', key, 'liste, antal:', len(value), flush=True)
-                      for item in value[:2]:
-                          print('  Eksempel:', json.dumps(item, ensure_ascii=False, default=str)[:1400], flush=True)
-                  elif isinstance(value, dict):
-                      print('  Felt:', key, 'objekt med felter:', list(value), flush=True)
-                      print('  Eksempel:', json.dumps(value, ensure_ascii=False, default=str)[:1400], flush=True)
+          root = 'https://dagsordener.silkeborg.dk'
+          session = requests.Session()
+          session.headers.update({'Accept': 'application/json', 'User-Agent': 'Funder-Lysbro-API-diagnose/1.0'})
+          r = session.get(root + '/api/agenda/udvalgsliste', timeout=25)
+          print('Udvalgsliste HTTP:', r.status_code, flush=True)
+          r.raise_for_status()
+          data = r.json()
+          udvalg = [u for gruppe in data['Udvalg'].values() for u in gruppe if isinstance(u, dict)]
+          kandidat = next((u for u in udvalg if u.get('Navn') == 'Byrådet' and u.get('Moeder')), None)
+          if not kandidat:
+              raise SystemExit('Ingen byrådsmøder i API-svaret. Intet ændret.')
+          moede = kandidat['Moeder'][0]
+          mid = moede['Id']
+          uid = kandidat['Id']
+          print('Testmøde:', kandidat['Navn'], 'dato:', moede.get('Dato'), 'møde-ID:', mid, flush=True)
+          print('Mødeobjektets felter:', list(moede), flush=True)
+          print('OBS: Nedenstående er kun en begrænset test af mulige API-adresser, ikke dokumenterede endpoints.', flush=True)
+
+          paths = [
+              f'/api/agenda/moede/{quote(str(mid))}',
+              f'/api/agenda/moede?id={quote(str(mid))}',
+              f'/api/agenda/meeting/{quote(str(mid))}',
+              f'/api/agenda/meeting?id={quote(str(mid))}',
+              f'/api/agenda/vis?id={quote(str(mid))}',
+              f'/api/agenda/dagsorden?id={quote(str(mid))}',
+              f'/api/agenda/dagsorden/{quote(str(mid))}',
+          ]
+          for path in paths:
+              try:
+                  response = session.get(root + path, timeout=15, allow_redirects=False)
+                  content_type = response.headers.get('Content-Type', '')
+                  print('\nENDPOINT:', path, 'HTTP:', response.status_code, 'type:', content_type, 'bytes:', len(response.content), flush=True)
+                  if response.status_code == 200 and 'json' in content_type.lower():
+                      try:
+                          payload = response.json()
+                          if isinstance(payload, dict):
+                              print('JSON felter:', list(payload)[:35], flush=True)
+                          elif isinstance(payload, list):
+                              print('JSON liste: antal', len(payload), 'første elements felter:', list(payload[0])[:25] if payload and isinstance(payload[0], dict) else '-', flush=True)
+                          print('JSON uddrag:', json.dumps(payload, ensure_ascii=False, default=str)[:900], flush=True)
+                      except ValueError:
+                          print('Kunne ikke fortolke JSON', flush=True)
                   else:
-                      print('  Felt:', key, 'værdi:', str(value)[:250], flush=True)
-          print('\nDiagnose gennemfoert. Ingen data eller hjemmeside er aendret.', flush=True)
+                      print('Svaruddrag:', response.text[:180].replace('\n', ' '), flush=True)
+              except requests.RequestException as exc:
+                  print('Netværksfejl:', type(exc).__name__, str(exc)[:160], flush=True)
+          print('\nTest afsluttet. Ingen filer, historik eller hjemmeside er ændret.', flush=True)
           PY
