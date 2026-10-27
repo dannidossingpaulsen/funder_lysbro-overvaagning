@@ -152,6 +152,11 @@ jobs:
               ]
 
               rows = []
+              alle_navn = []
+              for gruppe in data["Udvalg"].values():
+                  for udvalg in gruppe:
+                      alle_navn.append(str(udvalg.get("Navn", "")))
+              print(f"DIAG: Udvalg fra API: {len(alle_navn)}; navne: {alle_navn[:35]}", flush=True)
 
               for gruppe in data["Udvalg"].values():
                   for udvalg in gruppe:
@@ -166,14 +171,18 @@ jobs:
                           "udvalg_id": udvalg_id
                       })
 
+              print(f"DIAG: Udvalg efter navnefilter: {len(rows)}; matchede: {[r['udvalg'] for r in rows]}", flush=True)
+              if not rows:
+                  raise RuntimeError("Ingen udvalg matcher de forventede navne. Se DIAG-linjen med API-navne. Eksisterende data bevares.")
               return pd.DataFrame(rows).drop_duplicates().reset_index(drop=True)
 
 
           async def hent_moedelinks_for_udvalg(page, udvalg_navn, udvalg_id):
               udvalg_url = f"https://dagsordener.silkeborg.dk/?request.kriterie.udvalgId={udvalg_id}"
 
-              await page.goto(udvalg_url, wait_until="domcontentloaded", timeout=30000)
+              response = await page.goto(udvalg_url, wait_until="domcontentloaded", timeout=30000)
               await page.wait_for_timeout(5000)
+              print(f"DIAG: {udvalg_navn}: HTTP {response.status if response else 'ukendt'}, side={page.url}, titel={(await page.title())[:100]}", flush=True)
 
               links = await page.locator("a").evaluate_all("""
                   els => els.map(a => ({
@@ -182,6 +191,7 @@ jobs:
                   }))
               """)
 
+              print(f"DIAG: {udvalg_navn}: {len(links)} links i alt; eksempler: {[(x['text'][:65], x['href'][:150]) for x in links[:8]]}", flush=True)
               rows = []
 
               for link in links:
@@ -196,6 +206,7 @@ jobs:
                           "vis_url": href
                       })
 
+              print(f"DIAG: {udvalg_navn}: {len(rows)} links matcher /vis? og &id=", flush=True)
               df = pd.DataFrame(rows).drop_duplicates().reset_index(drop=True)
 
               grænse = 7 if udvalg_navn == "Økonomiudvalget" else 5
@@ -222,7 +233,7 @@ jobs:
                           )
                           alle_rows.extend(rows)
                       except Exception as e:
-                          print(f"Fejl ved udvalg {row['udvalg']}: {e}")
+                          print(f"DIAG: Fejl ved udvalg {row['udvalg']}: {type(e).__name__}: {e}", flush=True)
 
                   await browser.close()
 
@@ -755,6 +766,7 @@ jobs:
 
           async def main():
               df_udvalg = hent_udvalg()
+              print(f"DIAG: Starter mødeindsamling for {len(df_udvalg)} udvalg", flush=True)
               df_alle_moedelinks = await hent_alle_moedelinks(df_udvalg)
               print(f"Antal mødelinks fundet: {len(df_alle_moedelinks)}", flush=True)
               if df_alle_moedelinks.empty:
