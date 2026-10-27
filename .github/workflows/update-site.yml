@@ -112,292 +112,131 @@ jobs:
               return pd.to_datetime(iso, errors="coerce")
 
 
-          def hent_udvalg():
-              url = "https://dagsordener.silkeborg.dk/api/agenda/udvalgsliste"
-              data = None
-              for forsog in range(1, 4):
+          API_ROOT = "https://dagsordener.silkeborg.dk"
+          UDVALG_NAVNE = {
+              "Økonomiudvalget", "Erhvervs-, Uddannelses- og Arbejdsmarkedsudvalget",
+              "Klima- og Miljøudvalget", "Plan-, Vej- og Trafikudvalget",
+              "Dagtilbuds- og Familieudvalget", "Skoleudvalget", "Socialudvalget",
+              "Ældre- og Sundhedsudvalget", "Nærheds- og Landdistriktsudvalget",
+              "Kultur- og Fritidsudvalget", "Seniorrådet", "Handicaprådet", "Byrådet"
+          }
+
+          def api_json(url):
+              last_error = None
+              for attempt in range(1, 4):
                   try:
-                      response = requests.get(
-                          url,
-                          timeout=(10, 30),
-                          headers={"Accept": "application/json", "User-Agent": "Funder-Lysbro-Lokalraad/1.0"}
-                      )
-                      response.raise_for_status()
-                      data = response.json()
-                      if not isinstance(data, dict) or not isinstance(data.get("Udvalg"), dict):
-                          raise ValueError("Svaret mangler den forventede Udvalg-liste")
-                      print(f"Udvalgslisten hentet (forsøg {forsog}).")
-                      break
-                  except (requests.exceptions.RequestException, ValueError) as e:
-                      print(f"Forsøg {forsog}/3 på kommunens udvalgsliste fejlede: {e}")
-                      if forsog < 3:
-                          time.sleep(5 * forsog)
-              if data is None or not isinstance(data, dict) or not isinstance(data.get("Udvalg"), dict):
-                  raise RuntimeError("Kommunens udvalgsliste kunne ikke hentes efter 3 forsøg. Tidligere data bevares uændret.")
+                      r = requests.get(url, timeout=(10, 75), headers={
+                          "Accept": "application/json", "User-Agent": "Funder-Lysbro-Overvaagning/1.0"
+                      })
+                      r.raise_for_status()
+                      return r.json()
+                  except (requests.RequestException, ValueError) as exc:
+                      last_error = exc
+                      print(f"API-forsøg {attempt}/3 mislykkedes: {url}: {exc}", flush=True)
+                      if attempt < 3:
+                          time.sleep(attempt * 3)
+              raise RuntimeError(f"Kunne ikke hente API-data: {url}: {last_error}")
 
-              aktuelle_udvalg = [
-                  "Økonomiudvalget",
-                  "Erhvervs-, Uddannelses- og Arbejdsmarkedsudvalget",
-                  "Klima- og Miljøudvalget",
-                  "Plan-, Vej- og Trafikudvalget",
-                  "Dagtilbuds- og Familieudvalget",
-                  "Skoleudvalget",
-                  "Socialudvalget",
-                  "Ældre- og Sundhedsudvalget",
-                  "Nærheds- og Landdistriktsudvalget",
-                  "Kultur- og Fritidsudvalget",
-                  "Seniorrådet",
-                  "Handicaprådet",
-                  "Byrådet"
-              ]
-
+          def hent_moeder_fra_api():
+              data = api_json(API_ROOT + "/api/agenda/udvalgsliste")
+              if not isinstance(data, dict) or not isinstance(data.get("Udvalg"), dict):
+                  raise RuntimeError("Udvalgsliste har ukendt format. Historik bevares.")
               rows = []
-              alle_navn = []
+              matched = 0
               for gruppe in data["Udvalg"].values():
                   for udvalg in gruppe:
-                      alle_navn.append(str(udvalg.get("Navn", "")))
-              print(f"DIAG: Udvalg fra API: {len(alle_navn)}; navne: {alle_navn[:35]}", flush=True)
-
-              for gruppe in data["Udvalg"].values():
-                  for udvalg in gruppe:
-                      navn = udvalg["Navn"]
-                      udvalg_id = udvalg["Id"]
-
-                      if navn not in aktuelle_udvalg:
+                      if udvalg.get("Navn") not in UDVALG_NAVNE:
                           continue
-
-                      rows.append({
-                          "udvalg": navn,
-                          "udvalg_id": udvalg_id
-                      })
-
-              print(f"DIAG: Udvalg efter navnefilter: {len(rows)}; matchede: {[r['udvalg'] for r in rows]}", flush=True)
-              if not rows:
-                  raise RuntimeError("Ingen udvalg matcher de forventede navne. Se DIAG-linjen med API-navne. Eksisterende data bevares.")
-              return pd.DataFrame(rows).drop_duplicates().reset_index(drop=True)
-
-
-          async def hent_moedelinks_for_udvalg(page, udvalg_navn, udvalg_id):
-              udvalg_url = f"https://dagsordener.silkeborg.dk/?request.kriterie.udvalgId={udvalg_id}"
-
-              response = await page.goto(udvalg_url, wait_until="domcontentloaded", timeout=30000)
-              await page.wait_for_timeout(5000)
-              print(f"DIAG: {udvalg_navn}: HTTP {response.status if response else 'ukendt'}, side={page.url}, titel={(await page.title())[:100]}", flush=True)
-
-              links = await page.locator("a").evaluate_all("""
-                  els => els.map(a => ({
-                      text: (a.innerText || '').trim(),
-                      href: a.href
-                  }))
-              """)
-
-              print(f"DIAG: {udvalg_navn}: {len(links)} links i alt; eksempler: {[(x['text'][:65], x['href'][:150]) for x in links[:8]]}", flush=True)
-              rows = []
-
-              for link in links:
-                  text = link["text"]
-                  href = link["href"]
-
-                  if "/vis?" in href and "&id=" in href:
-                      rows.append({
-                          "udvalg": udvalg_navn,
-                          "udvalg_id": udvalg_id,
-                          "tekst": text,
-                          "vis_url": href
-                      })
-
-              print(f"DIAG: {udvalg_navn}: {len(rows)} links matcher /vis? og &id=", flush=True)
-              df = pd.DataFrame(rows).drop_duplicates().reset_index(drop=True)
-
-              grænse = 7 if udvalg_navn == "Økonomiudvalget" else 5
-              return df.head(grænse).to_dict("records")
-
-
-          async def hent_alle_moedelinks(df_udvalg):
-              alle_rows = []
-
-              async with async_playwright() as p:
-                  browser = await p.chromium.launch(
-                      headless=True,
-                      args=["--no-sandbox", "--disable-setuid-sandbox"]
-                  )
-                  page = await browser.new_page()
-                  page.set_default_timeout(15000)
-
-                  for _, row in df_udvalg.iterrows():
-                      try:
-                          rows = await hent_moedelinks_for_udvalg(
-                              page,
-                              row["udvalg"],
-                              row["udvalg_id"]
-                          )
-                          alle_rows.extend(rows)
-                      except Exception as e:
-                          print(f"DIAG: Fejl ved udvalg {row['udvalg']}: {type(e).__name__}: {e}", flush=True)
-
-                  await browser.close()
-
-              return pd.DataFrame(alle_rows).drop_duplicates().reset_index(drop=True)
-
-
-          async def hent_udfoldet_moedetekst(page, vis_url):
-              await page.goto(vis_url, wait_until="domcontentloaded", timeout=30000)
-              await page.wait_for_timeout(6000)
-
-              body_text = await page.locator("body").inner_text()
-              punkttitler = []
-
-              for linje in body_text.splitlines():
-                  linje = linje.strip()
-                  if re.match(r"^\d+\.\s", linje):
-                      punkttitler.append(linje)
-
-              punkttitler = list(dict.fromkeys(punkttitler))
-
-              for titel in punkttitler:
-                  try:
-                      await page.get_by_text(titel, exact=True).first.click(timeout=3000)
-                      await page.wait_for_timeout(400)
-                  except Exception:
-                      pass
-
-              return await page.locator("body").inner_text()
-
-
-          async def tjek_relevante_moeder(df_links):
-              resultater = []
-
-              async with async_playwright() as p:
-                  browser = await p.chromium.launch(
-                      headless=True,
-                      args=["--no-sandbox", "--disable-setuid-sandbox"]
-                  )
-                  page = await browser.new_page()
-                  page.set_default_timeout(15000)
-
-                  for _, row in df_links.iterrows():
-                      try:
-                          body_text = await hent_udfoldet_moedetekst(page, row["vis_url"])
-
-                          resultater.append({
-                              "udvalg": row["udvalg"],
-                              "tekst": row["tekst"],
-                              "vis_url": row["vis_url"],
-                              "Funder": "Funder" in body_text,
-                              "Lysbro": "Lysbro" in body_text
-                          })
-
-                      except Exception as e:
-                          print(f"Fejl i møde {row['vis_url']}: {e}")
-                          resultater.append({
-                              "udvalg": row["udvalg"],
-                              "tekst": row["tekst"],
-                              "vis_url": row["vis_url"],
-                              "Funder": False,
-                              "Lysbro": False
-                          })
-
-                  await browser.close()
-
-              return pd.DataFrame(resultater, columns=["udvalg", "tekst", "vis_url", "Funder", "Lysbro"])
-
-
-          async def udtraek_relevante_punkter_fra_moede(page, vis_url):
-              await page.goto(vis_url, wait_until="domcontentloaded", timeout=30000)
-              await page.wait_for_timeout(6000)
-
-              toptekst = await page.locator("body").inner_text()
-
-              udvalg_match = re.search(r"Udvalg:\s*(.*)", toptekst)
-              dato_match = re.search(r"Mødedato:\s*(.*)", toptekst)
-
-              udvalg = udvalg_match.group(1).strip() if udvalg_match else None
-              dato = dato_match.group(1).strip() if dato_match else None
-
-              punkttitler = []
-
-              for linje in toptekst.splitlines():
-                  linje = linje.strip()
-                  if re.match(r"^\d+\.\s", linje):
-                      punkttitler.append(linje)
-
-              punkttitler = list(dict.fromkeys(punkttitler))
-              rows = []
-
-              for i, titel in enumerate(punkttitler):
-                  try:
-                      await page.get_by_text(titel, exact=True).first.click(timeout=3000)
-                      await page.wait_for_timeout(700)
-
-                      body_text = await page.locator("body").inner_text()
-                      næste_titel = punkttitler[i + 1] if i + 1 < len(punkttitler) else None
-
-                      if næste_titel:
-                          mønster = rf"({re.escape(titel)}.*?)(?:\n\s*{re.escape(næste_titel)}|$)"
-                      else:
-                          mønster = rf"({re.escape(titel)}.*)$"
-
-                      blok_match = re.search(mønster, body_text, flags=re.S)
-
-                      if not blok_match:
-                          continue
-
-                      blok = blok_match.group(1)
-
-                      if ("Funder" not in blok) and ("Lysbro" not in blok):
-                          continue
-
-                      soegeord = []
-                      if "Funder" in blok:
-                          soegeord.append("Funder")
-                      if "Lysbro" in blok:
-                          soegeord.append("Lysbro")
-
-                      resume_match = re.search(r"Resume\s*(.*?)\s*Indstilling", blok, flags=re.S)
-                      indstilling_match = re.search(
-                          r"Indstilling\s*(.*?)(?:\s*Beskrivelse af sagen|\Z)",
-                          blok,
-                          flags=re.S
-                      )
-
-                      rows.append({
-                          "søgeord": ", ".join(soegeord),
-                          "dagsordentitel": titel,
-                          "udvalg": udvalg,
-                          "dato": dato,
-                          "resume": rens_visningstekst(resume_match.group(1)) if resume_match else "",
-                          "indstilling": rens_visningstekst(indstilling_match.group(1)) if indstilling_match else "",
-                          "url": vis_url,
-                          "kilde": "Silkeborg Kommune"
-                      })
-
-                  except Exception as e:
-                      print(f"Fejl i punkt '{titel}': {e}")
-
+                      matched += 1
+                      meetings = udvalg.get("Moeder") or []
+                      graense = 7 if udvalg["Navn"] == "Økonomiudvalget" else 5
+                      for moede in meetings[:graense]:
+                          if not moede.get("Id"):
+                              continue
+                          rows.append({"udvalg": udvalg["Navn"], "moede": moede})
+              print(f"API: {matched} udvalg og {len(rows)} møder", flush=True)
+              if matched == 0 or not rows:
+                  raise RuntimeError("API returnerede ingen relevante møder. Historik bevares.")
               return rows
 
+          def tekst_fra_html(value):
+              return rens_visningstekst(BeautifulSoup(str(value or ""), "html.parser").get_text(" ", strip=True))
 
-          async def byg_silkeborg_appdata(df_relevante_moeder):
-              alle_rows = []
-
-              async with async_playwright() as p:
-                  browser = await p.chromium.launch(
-                      headless=True,
-                      args=["--no-sandbox", "--disable-setuid-sandbox"]
-                  )
-                  page = await browser.new_page()
-                  page.set_default_timeout(15000)
-
-                  for _, row in df_relevante_moeder.iterrows():
-                      try:
-                          rows = await udtraek_relevante_punkter_fra_moede(page, row["vis_url"])
-                          alle_rows.extend(rows)
-                      except Exception as e:
-                          print(f"Fejl i relevant møde {row['vis_url']}: {e}")
-
-                  await browser.close()
-
-              return pd.DataFrame(alle_rows)
+          def hent_silkeborg_appdata():
+              meetings = hent_moeder_fra_api()
+              rows = []
+              succes = 0
+              fejl = 0
+              for entry in meetings:
+                  moede = entry["moede"]
+                  mid = str(moede["Id"])
+                  url = API_ROOT + "/api/agenda/dagsorden/" + mid
+                  try:
+                      data = api_json(url)
+                      punkter = data.get("Dagsordenpunkter") if isinstance(data, dict) else None
+                      if not isinstance(punkter, list):
+                          raise ValueError("Dagsordenpunkter mangler eller er ikke en liste")
+                      succes += 1
+                      for idx, punkt in enumerate(punkter, 1):
+                          if not isinstance(punkt, dict):
+                              continue
+                          felter = punkt.get("Felter") or []
+                          tekster = []
+                          navngivne = {}
+                          for felt in felter:
+                              if not isinstance(felt, dict):
+                                  continue
+                              navn = str(felt.get("Navn") or "").strip().lower()
+                              tekst = tekst_fra_html(felt.get("Html") or felt.get("Tekst") or "")
+                              if tekst:
+                                  tekster.append(tekst)
+                                  navngivne[navn] = (navngivne.get(navn, "") + " " + tekst).strip()
+                          titel = next((str(punkt.get(k)) for k in ("Titel", "Overskrift", "Navn", "PunktTitel") if punkt.get(k)), "")
+                          if not titel:
+                              titel = next((str(punkt.get(k)) for k in ("Sagsoverskrift", "SagsTitel") if punkt.get(k)), "")
+                          if not titel:
+                              titel = f"Dagsordenspunkt {punkt.get('PunktNr') or punkt.get('Nummer') or idx}"
+                          samlet = " ".join([titel] + tekster)
+                          funder = bool(re.search(r"\bFunder\b", samlet, flags=re.I))
+                          lysbro = bool(re.search(r"\bLysbro\b", samlet, flags=re.I))
+                          if not (funder or lysbro):
+                              continue
+                          soegeord = ", ".join(x for x, found in (("Funder", funder), ("Lysbro", lysbro)) if found)
+                          # Felter kan være samlet HTML uden særskilte navne.
+                          fuldtekst = " ".join(tekster)
+                          resume = next((v for k, v in navngivne.items() if "resume" in k or "resumé" in k), "")
+                          indstilling = next((v for k, v in navngivne.items() if "indstilling" in k), "")
+                          if not resume:
+                              m = re.search(r"Resum[eé]\s*(.*?)(?:Indstilling|Beskrivelse af sagen|$)", fuldtekst, flags=re.I | re.S)
+                              resume = rens_visningstekst(m.group(1)) if m else ""
+                          if not indstilling:
+                              m = re.search(r"Indstilling\s*(.*?)(?:Beskrivelse af sagen|Sagsfremstilling|$)", fuldtekst, flags=re.I | re.S)
+                              indstilling = rens_visningstekst(m.group(1)) if m else ""
+                          if not resume and not indstilling:
+                              resume = kort_tekst(fuldtekst, 700)
+                          dato_raw = moede.get("Dato") or ""
+                          try:
+                              dato = datetime.fromisoformat(dato_raw).strftime("%d-%m-%Y kl. %H.%M")
+                          except (ValueError, TypeError):
+                              dato = str(dato_raw)
+                          rows.append({
+                              "søgeord": soegeord, "dagsordentitel": titel,
+                              "udvalg": entry["udvalg"], "dato": dato,
+                              "resume": resume, "indstilling": indstilling,
+                              "url": API_ROOT + "/vis?id=" + mid,
+                              "kilde": "Silkeborg Kommune", "dato_iso": dato_raw,
+                              "moede_id": mid, "punkt_id": str(punkt.get("Id") or idx)
+                          })
+                  except Exception as exc:
+                      fejl += 1
+                      print(f"FEJL ved dagsorden {mid} ({entry['udvalg']}): {exc}", flush=True)
+              print(f"API: {succes} dagsordener læst, {fejl} fejl, {len(rows)} relevante punkter", flush=True)
+              if succes == 0 or fejl:
+                  raise RuntimeError(f"API-indlæsning ufuldstændig ({fejl} fejl). Eksisterende data bevares uændret.")
+              df = pd.DataFrame(rows, columns=["søgeord", "dagsordentitel", "udvalg", "dato", "resume", "indstilling", "url", "kilde", "dato_iso", "moede_id", "punkt_id"])
+              if not df.empty:
+                  df = df.drop_duplicates(subset=["moede_id", "punkt_id"]).sort_values("dato_iso", ascending=False).reset_index(drop=True)
+              return df
 
 
           def hent_mja_forside_links():
@@ -765,25 +604,8 @@ jobs:
 
 
           async def main():
-              df_udvalg = hent_udvalg()
-              print(f"DIAG: Starter mødeindsamling for {len(df_udvalg)} udvalg", flush=True)
-              df_alle_moedelinks = await hent_alle_moedelinks(df_udvalg)
-              print(f"Antal mødelinks fundet: {len(df_alle_moedelinks)}", flush=True)
-              if df_alle_moedelinks.empty:
-                  raise RuntimeError("Ingen mødelinks fundet hos Silkeborg Kommune. Stopper uden at overskrive den eksisterende hjemmeside eller historik.")
-
-              df_hits_fuldtekst = await tjek_relevante_moeder(df_alle_moedelinks)
-
-              df_relevante_hits = df_hits_fuldtekst[
-                  (df_hits_fuldtekst["Funder"] == True) | (df_hits_fuldtekst["Lysbro"] == True)
-              ].copy()
-
-              df_silkeborg_app = await byg_silkeborg_appdata(df_relevante_hits)
-              df_silkeborg_app = df_silkeborg_app.drop_duplicates().reset_index(drop=True)
-
-              if not df_silkeborg_app.empty:
-                  df_silkeborg_app["dato_sort"] = df_silkeborg_app["dato"].apply(parse_dansk_dato)
-                  df_silkeborg_app = df_silkeborg_app.sort_values("dato_sort", ascending=False).reset_index(drop=True)
+              # Kommunens dagsordener hentes direkte fra det verificerede API.
+              df_silkeborg_app = hent_silkeborg_appdata()
 
               # MJA er bonuskilde. Fejl her må aldrig vælte hele workflowet.
               try:
