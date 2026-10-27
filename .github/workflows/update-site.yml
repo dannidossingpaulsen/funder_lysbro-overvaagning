@@ -288,7 +288,7 @@ jobs:
 
                   await browser.close()
 
-              return pd.DataFrame(resultater)
+              return pd.DataFrame(resultater, columns=["udvalg", "tekst", "vis_url", "Funder", "Lysbro"])
 
 
           async def udtraek_relevante_punkter_fra_moede(page, vis_url):
@@ -756,6 +756,9 @@ jobs:
           async def main():
               df_udvalg = hent_udvalg()
               df_alle_moedelinks = await hent_alle_moedelinks(df_udvalg)
+              print(f"Antal mødelinks fundet: {len(df_alle_moedelinks)}", flush=True)
+              if df_alle_moedelinks.empty:
+                  raise RuntimeError("Ingen mødelinks fundet hos Silkeborg Kommune. Stopper uden at overskrive den eksisterende hjemmeside eller historik.")
 
               df_hits_fuldtekst = await tjek_relevante_moeder(df_alle_moedelinks)
 
