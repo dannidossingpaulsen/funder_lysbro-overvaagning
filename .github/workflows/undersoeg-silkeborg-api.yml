@@ -1,0 +1,61 @@
+name: Undersoeg Silkeborg API
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  undersoeg-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Installer requests
+        run: pip install requests
+      - name: Undersoeg udvalgslisten og moedernes struktur
+        run: |
+          python - <<'PY'
+          import json, requests, time
+          from collections import Counter
+
+          URL = 'https://dagsordener.silkeborg.dk/api/agenda/udvalgsliste'
+          s = requests.Session()
+          s.headers.update({'Accept': 'application/json', 'User-Agent': 'Funder-Lysbro-API-diagnose/1.0'})
+          response = s.get(URL, timeout=(10, 30))
+          print('API HTTP:', response.status_code, 'Content-Type:', response.headers.get('Content-Type'), flush=True)
+          response.raise_for_status()
+          try:
+              data = response.json()
+          except ValueError:
+              print('API svarede ikke med JSON. De foerste 350 tegn:', response.text[:350], flush=True)
+              raise SystemExit('API-format skal undersoeges foer omlægning')
+          print('Topniveau-felter:', list(data) if isinstance(data, dict) else type(data).__name__, flush=True)
+          groups = data.get('Udvalg', {}) if isinstance(data, dict) else {}
+          if not isinstance(groups, dict):
+              raise SystemExit('Ukendt struktur i Udvalg')
+          print('Grupper:', list(groups), flush=True)
+          udvalg = [u for g in groups.values() if isinstance(g, list) for u in g if isinstance(u, dict)]
+          print('Antal udvalg:', len(udvalg), flush=True)
+          print('Udvalgsfelter:', sorted({k for u in udvalg for k in u}), flush=True)
+          for u in udvalg:
+              navn = u.get('Navn', '')
+              if navn not in ('Plan-, Vej- og Trafikudvalget', 'Nærheds- og Landdistriktsudvalget', 'Økonomiudvalget', 'Byrådet'):
+                  continue
+              print('\nUDVALG:', navn, 'id:', u.get('Id'), flush=True)
+              for key, value in u.items():
+                  if key in ('Navn', 'Id'): continue
+                  if isinstance(value, list):
+                      print('  Felt:', key, 'liste, antal:', len(value), flush=True)
+                      for item in value[:2]:
+                          print('  Eksempel:', json.dumps(item, ensure_ascii=False, default=str)[:1400], flush=True)
+                  elif isinstance(value, dict):
+                      print('  Felt:', key, 'objekt med felter:', list(value), flush=True)
+                      print('  Eksempel:', json.dumps(value, ensure_ascii=False, default=str)[:1400], flush=True)
+                  else:
+                      print('  Felt:', key, 'værdi:', str(value)[:250], flush=True)
+          print('\nDiagnose gennemfoert. Ingen data eller hjemmeside er aendret.', flush=True)
+          PY
