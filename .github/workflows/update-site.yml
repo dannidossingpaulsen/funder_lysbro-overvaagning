@@ -43,6 +43,7 @@ jobs:
           import requests
           import pandas as pd
           import asyncio
+          import time
           from datetime import datetime
           from zoneinfo import ZoneInfo
           from bs4 import BeautifulSoup
@@ -113,7 +114,26 @@ jobs:
 
           def hent_udvalg():
               url = "https://dagsordener.silkeborg.dk/api/agenda/udvalgsliste"
-              data = requests.get(url, timeout=30).json()
+              data = None
+              for forsog in range(1, 4):
+                  try:
+                      response = requests.get(
+                          url,
+                          timeout=(10, 30),
+                          headers={"Accept": "application/json", "User-Agent": "Funder-Lysbro-Lokalraad/1.0"}
+                      )
+                      response.raise_for_status()
+                      data = response.json()
+                      if not isinstance(data, dict) or not isinstance(data.get("Udvalg"), dict):
+                          raise ValueError("Svaret mangler den forventede Udvalg-liste")
+                      print(f"Udvalgslisten hentet (forsøg {forsog}).")
+                      break
+                  except (requests.exceptions.RequestException, ValueError) as e:
+                      print(f"Forsøg {forsog}/3 på kommunens udvalgsliste fejlede: {e}")
+                      if forsog < 3:
+                          time.sleep(5 * forsog)
+              if data is None or not isinstance(data, dict) or not isinstance(data.get("Udvalg"), dict):
+                  raise RuntimeError("Kommunens udvalgsliste kunne ikke hentes efter 3 forsøg. Tidligere data bevares uændret.")
 
               aktuelle_udvalg = [
                   "Økonomiudvalget",
